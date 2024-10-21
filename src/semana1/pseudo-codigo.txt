@@ -1,0 +1,14 @@
+VSYNC=1 -> Nenhum frame está sendo transmitido
+VSYNC=0 -> Um frame está sendo transmitido 
+            HEF=0 -> Nenhuma linha está sendo transmitida
+            HEF subida 0/1 -> Início da transmissão da linha
+                PCLK subida 0/1 -> Ler os 8 bits (byet 1)
+                PCLK subida 0/1 -> Ler os 8 bits (byte 2)
+
+
+while VSYNC = 0:
+    if subida de HEF:
+        while(not descida de HEF):
+            if subida de PCLK:
+                le e armazena 1 byte
+                incrementa endereço de escrita da memória
