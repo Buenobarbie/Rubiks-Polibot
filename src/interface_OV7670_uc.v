@@ -21,26 +21,33 @@ module interface_OV7670_uc (
     input wire       HREF,
     input wire       transmite_frame, 
     input wire       transmite_byte,
-    output reg      PWDN,
-    output reg      write_en,
-    output reg      zera_linha,
-    output reg      zera_coluna,
-    output reg      conta_linha,
-    output reg      conta_coluna,
+    input wire       pixel_armazenado,
+    input wire       fim_linha_quadrante,
+    output reg       byte_estavel,
+    output reg       zera_linha_pixel,
+    output reg       zera_coluna_pixel,
+    output reg       zera_linha_quadrante,
+    output reg       zera_coluna_quadrante,
+    output reg       conta_linha_pixel,
+    output reg       conta_coluna_pixel,
+    output reg       conta_linha_quadrante,
+    output reg       conta_coluna_quadrante,
     output reg [3:0] db_estado 
 );
 
     // Tipos e sinais
-    reg [2:0] Eatual, Eprox; // 3 bits são suficientes para 7 estados
+    reg [3:0] Eatual, Eprox; 
 
     // Parâmetros para os estados
-    parameter inicial         = 3'b000;
-    parameter espera_frame    = 3'b001;
-    parameter espera_linha    = 3'b010;
-    parameter atualiza_linha  = 3'b011;
-    parameter espera_byte     = 3'b100;
-    parameter armazena_byte   = 3'b101;
-    parameter atualiza_coluna = 3'b110;
+    parameter inicial         = 4'b0000;
+    parameter espera_frame    = 4'b0001;
+    parameter espera_linha    = 4'b0010;
+    parameter atualiza_linha  = 4'b0011;
+    parameter espera_byte     = 4'b0100;
+    parameter armazena_byte   = 4'b0101;
+    parameter atualiza_coluna = 4'b0110;
+    parameter atualiza_linha_quadrante  = 4'b0111;
+    parameter atualiza_coluna_quadrante = 4'b1000;
     
     // Estado
     always @(posedge clock, posedge reset) begin
@@ -58,20 +65,25 @@ module interface_OV7670_uc (
             espera_linha:    Eprox = VSYNC ? inicial : (HREF ? atualiza_linha : espera_linha);
             atualiza_linha:  Eprox = espera_byte;
             espera_byte:     Eprox = ~HREF ? espera_linha : (transmite_byte ? armazena_byte : espera_byte);
-            armazena_byte:   Eprox = atualiza_coluna;
+            armazena_byte:   Eprox = ~pixel_armazenado ? atualiza_coluna : (fim_linha_quadrante ? atualiza_coluna_quadrante : atualiza_linha_quadrante);
             atualiza_coluna: Eprox = espera_byte;
+            atualiza_linha_quadrante:  Eprox = atualiza_coluna;
+            atualiza_coluna_quadrante: Eprox = atualiza_linha_quadrante;
             default:         Eprox = inicial;
         endcase
     end
 
     // Saídas de controle
     always @(*) begin
-        PWDN         = (Eatual == inicial) ? 1'b1 : 1'b0;
-        zera_linha   = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        zera_coluna  = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        conta_linha  = (Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        conta_coluna = (Eatual == atualiza_coluna) ? 1'b1 : 1'b0;
-        write_en     = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
+        byte_estavel       = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
+        zera_linha_pixel    = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        zera_coluna_pixel   = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
+        zera_linha_quadrante    = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        zera_coluna_quadrante   = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        conta_linha_pixel   = (Eatual == atualiza_linha) ? 1'b1 : 1'b0;
+        conta_coluna_pixel  = (Eatual == atualiza_coluna) ? 1'b1 : 1'b0;
+        conta_linha_quadrante   = (Eatual == atualiza_linha_quadrante) ? 1'b1 : 1'b0;
+        conta_coluna_quadrante  = (Eatual == atualiza_coluna_quadrante) ? 1'b1 : 1'b0;
 
         case (Eatual)
             inicial:         db_estado = 4'b0000;
@@ -80,8 +92,10 @@ module interface_OV7670_uc (
             atualiza_linha:  db_estado = 4'b0011;
             espera_byte:     db_estado = 4'b0100;
             armazena_byte:   db_estado = 4'b0101;
-            atualiza_coluna: db_estado = 4'b1111;
-            default:         db_estado = 4'b1110;
+            atualiza_coluna: db_estado = 4'b0110;
+            atualiza_linha_quadrante:   db_estado = 4'b0111;
+            atualiza_coluna_quadrante:  db_estado = 4'b1000;
+            default:         db_estado = 4'b1001;
         endcase
     end
 endmodule
