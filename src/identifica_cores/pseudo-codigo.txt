@@ -1,0 +1,52 @@
+Módulo que vai ler os 9 pixels da memória e escrever 
+em uma outra memória as 9 cores correspondentes
+
+Entradas:
+    valor do pixel lido da memória
+
+Saída: 
+    - endereço da linha e coluna para ler o pixel
+        e para escrever a cor
+    - valor de 3 bits que corresponde à cor do pixel
+    - write_en para escrever o valor da cor na memória
+    - sinal de pronto, para determinar que todos os pixels 
+        da primeira memória tiveram suas cores identificadas e escritas 
+        na memória de cores
+
+Componentes:
+    - Contador linha  (3) -> addr_linha
+    - Contador coluna (3) -> addr_coluna
+    - Contador de cores (6) -> addr_cor
+    - memória de cores (externa): 6 faces x 3 x 3 com valores de 3bits
+    - rom de quadrados: 0 a 63 espaços. Cada um conterá o quadrado do endereço. Rom que permite ler 3 endereços
+    - rom das cores
+    - ram de distancia cores com 6 saídas sempre e um endereço de escrita
+
+
+Lógica:
+
+
+soma regA + regB + regC -> cor0
+
+... -> cor1
+... -> cor2
+... -> cor3
+... -> cor4
+... -> cor5
+
+
+    - dividir o pixel em R,G,B
+    - dividir a saída do contador de cores
+    - colocar as saídas em 3 absdiff
+        absdiff(6) -> rom[] -> diff² -> sum3Numbers 0
+        absdiff(6) -> rom[] -> diff² -> sum3Numbers 1
+        absdiff(6) -> rom[] -> diff² -> sum3Numbers 2
+        salvar resultado na ram distancia cores (addr_cores)
+    - incrementar contador de cores
+    - fazer isso para todas as cores
+
+
+    
+
+
+
