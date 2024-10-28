@@ -62,21 +62,21 @@ module interface_OV7670_tb;
         #100 reset_in = 0;
 
         // Iniciar
-        caso = 1
+        caso = 1;
         iniciar_in = 1;
         PCLK_in = 0;
         HREF_in = 0;
         VSYNC_in = 1;
-        #(5*clockPeriod) 
+        #(5*clockPeriod) ;
 
         // Inicio da transmissão do frame
         VSYNC_in = 0;
-        #(5*clockPeriod) 
+        #(5*clockPeriod) ;
 
         for(i=0; i<140; i = i+1) begin
             // Inicio da transmissão da linha
             HREF_in = 1;
-            #(5*clockPeriod) 
+            #(5*clockPeriod) ;
 
             for(j=0; j<320; j=j+1) begin
                 caso = caso + 1;
@@ -110,16 +110,16 @@ module interface_OV7670_tb;
                 else begin
                     D_in = 8'b00000000;
                 end
-                D_in = 8'b00000000;
                 PCLK_in = 1;
-                #(5*clockPeriod) 
+                #(5*clockPeriod) ;
                 PCLK_in = 0;
+                #(5*clockPeriod) ;
                 
             end
 
             // Fim da transmissão da linha
             HREF_in = 0;
-            #(5*clockPeriod) 
+            #(5*clockPeriod);
         end
        
 

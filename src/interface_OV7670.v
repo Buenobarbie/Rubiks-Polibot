@@ -44,7 +44,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
 );
 
     // Sinais internos
-    wire s_inciciar;
+    wire s_iniciar;
     wire s_transmite_frame;
     wire s_transmite_byte;
     wire s_write_en;
@@ -67,18 +67,18 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
 
 
     // Edge detector
-    edge_detector edge_frame (
+    edge_detector edge_iniciar (
         .clock  (clock ),
         .reset  (reset ),
         .sinal  (iniciar),
-        .pulso  (s_inciciar)
+        .pulso  (s_iniciar)
     );
 
     // Unidade de controle
     interface_OV7670_uc uc_OV7670 (
         .clock           (clock            ),
         .reset           (reset            ),
-        .inciciar        (s_inciciar       ),
+        .iniciar        (s_iniciar       ),
         .VSYNC           (VSYNC            ),
         .HREF            (HREF             ),
         .transmite_frame (s_transmite_frame),

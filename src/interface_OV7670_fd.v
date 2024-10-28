@@ -39,8 +39,8 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     // Sinais de controle
     wire [S_LINE-1:0]   linha_pixel;
     wire [S_COLUMN-1:0] coluna_pixel;
-    wire [2:0]          linha_quadrante_addr;
-    wire [2:0]          coluna_quadrante_addr;
+    wire [1:0]          linha_quadrante_addr;
+    wire [1:0]          coluna_quadrante_addr;
     wire                match_linha;
     wire                match_coluna;
     wire                we;
@@ -167,7 +167,7 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
         .data        (s_byte            ),
         .addr_line   (linha_quadrante_addr   ),
         .addr_column (coluna_quadrante_addr  ),
-        .q           (pixel     ),
+        .q           (pixel     )
     );
 
 endmodule
