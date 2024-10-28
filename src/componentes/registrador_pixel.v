@@ -9,17 +9,16 @@ module registrador_pixel (
 
     reg [15:0] IQ;
     reg [7:0] anterior;
-    reg [7:0] atual;
 
     always @(posedge clock or posedge clear) begin
-        if (clear)
+        if (clear) begin
             IQ <= 0;
             anterior <= 0;
-            atual <= 0;
-        else if (enable)
-            anterior <= atual;
-            atual <= D;
-            IQ <= {anterior, atual};
+        end 
+        else if (enable) begin
+            IQ <= {anterior, D};
+            anterior <= D;
+        end
     end
 
     assign Q = IQ;

@@ -34,9 +34,9 @@ module ram #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, S_COLUMN=9)
     always @ (posedge clk or posedge clear)
     begin
         if (clear) begin
-            for(i=0; i<10; i=i+1) begin
-                for(j=0; j<10; j=j+1) begin
-                    ram[i][j] <= 2'b00;
+            for(i=0; i<LINES-1; i=i+1) begin
+                for(j=0; j<COLUMNS-1; j=j+1) begin
+                    ram[i][j] <= 0;
                 end
             end
         end

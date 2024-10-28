@@ -31,7 +31,8 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     input wire         conta_coluna_quadrante,
     output wire        transmite_frame,
     output wire        transmite_byte,
-    output wire        fim_coluna_quadrante;
+    output wire        fim_coluna_quadrante,
+    output wire        pixel_armazenado,
     output wire [15:0]  pixel
 );
 

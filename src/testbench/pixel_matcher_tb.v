@@ -19,7 +19,7 @@
 module pixel_matcher_tb;
 
   // Input signals
-  reg         value_in;
+  reg [7:0]   value_in;
   reg         clock_in;
 
   // Output signals

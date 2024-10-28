@@ -20,13 +20,13 @@ module interface_OV7670_tb;
 
 
     // Componente a ser testado (Device Under Test -- DUT)
-    interface_OV7670 ut #(
+    interface_OV7670  #(
         .LINES   (2),
         .COLUMNS (2),
         .S_DATA  (8),
         .S_LINE  (1),
         .S_COLUMN(1)
-    )(
+    )ut (
         .clock  (clock_in),
         .reset  (reset_in),
         .iniciar(iniciar_in),
@@ -45,6 +45,8 @@ module interface_OV7670_tb;
 
     // Configurações do clock
     parameter clockPeriod = 20; // clock de 50MHz
+    integer caso;
+    
     // Gerador de clock
     always #(clockPeriod/2) clock_in = ~clock_in;
     
