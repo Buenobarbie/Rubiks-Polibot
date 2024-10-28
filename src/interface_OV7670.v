@@ -26,7 +26,7 @@
 // RESET	Input	     Reset (Active low)
 // PWDN	    Input	     Power down (Active high)
  
-module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, S_COLUMN=9)
+module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8, S_COLUMN=9)
 (
     input wire       clock,
     input wire       reset,
@@ -98,13 +98,13 @@ module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, 
     );
 
     // Fluxo de dados
-    interface_OV7670_fd fd_OV7670 #(
+    interface_OV7670_fd  #(
         .LINES   (LINES  ),
         .COLUMNS (COLUMNS),
         .S_DATA  (S_DATA ),
         .S_LINE  (S_LINE ),
         .S_COLUMN(S_COLUMN)
-    ) (
+    ) fd_OV7670 (
         .clock           (clock),
         .reset           (reset), 
         .VSYNC           (VSYNC),
