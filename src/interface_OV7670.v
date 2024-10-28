@@ -39,7 +39,8 @@ module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, 
     output wire      SDIOD,
     output wire      XCLK,
     output wire      PWDN,
-    output wire [3:0] db_estado 
+    output wire [3:0] db_estado ,
+    output wire [15:0] pixel
 );
 
     // Sinais internos
@@ -51,6 +52,19 @@ module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, 
     wire s_zera_coluna;
     wire s_conta_linha;
     wire s_conta_coluna;
+    wire s_pixel_armazenado;
+    wire s_fim_coluna_quadrante;
+    wire s_byte_estavel;
+    wire s_zera_linha_pixel;
+    wire s_zera_coluna_pixel;
+    wire s_zera_linha_quadrante;
+    wire s_zera_coluna_quadrante;
+    wire s_conta_linha_pixel;
+    wire s_conta_coluna_pixel;
+    wire s_conta_linha_quadrante;
+    wire s_conta_coluna_quadrante;
+    
+
 
     // Edge detector
     edge_detector edge_frame (
@@ -69,13 +83,18 @@ module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, 
         .HREF            (HREF             ),
         .transmite_frame (s_transmite_frame),
         .transmite_byte  (s_transmite_byte ),
-        .PWDN            (PWDN             ),
-        .write_en        (s_write_en       ),
-        .zera_linha      (s_zera_linha     ),
-        .zera_coluna     (s_zera_coluna    ),
-        .conta_linha     (s_conta_linha    ),
-        .conta_coluna    (s_conta_coluna   ),
-        .db_estado       (db_estado        )
+        .pixel_armazenado(s_pixel_armazenado ),
+        .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
+        .byte_estavel    ( s_byte_estavel   ),
+        .zera_linha_pixel( s_zera_linha_pixel),
+        .zera_coluna_pixel( s_zera_coluna_pixel),
+        .zera_linha_quadrante( s_zera_linha_quadrante),
+        .zera_coluna_quadrante( s_zera_coluna_quadrante),
+        .conta_linha_pixel( s_conta_linha_pixel),
+        .conta_coluna_pixel( s_conta_coluna_pixel),
+        .conta_linha_quadrante( s_conta_linha_quadrante),
+        .conta_coluna_quadrante( s_conta_coluna_quadrante),
+        .db_estado       ( db_estado        )
     );
 
     // Fluxo de dados
@@ -91,14 +110,20 @@ module interface_OV7670 #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, 
         .VSYNC           (VSYNC),
         .PCLK            (PCLK ),
         .D               (D    ),
-        .write_en        (s_write_en       ),
-        .zera_linha      (s_zera_linha     ),
-        .zera_coluna     (s_zera_coluna    ),  // (desconectado)
-        .conta_linha     (s_conta_linha    ),
-        .conta_coluna    (s_conta_coluna   ),
+        .byte_estavel    (s_byte_estavel   ),
+        .zera_linha_pixel( s_zera_linha_pixel),
+        .zera_coluna_pixel( s_zera_coluna_pixel),
+        .conta_linha_pixel( s_conta_linha_pixel),
+        .conta_coluna_pixel( s_conta_coluna_pixel),
+        .zera_linha_quadrante( s_zera_linha_quadrante),
+        .zera_coluna_quadrante( s_zera_coluna_quadrante),
+        .conta_linha_quadrante( s_conta_linha_quadrante),
+        .conta_coluna_quadrante( s_conta_coluna_quadrante),
         .transmite_frame (s_transmite_frame),
         .transmite_byte  (s_transmite_byte ),
-        .s_byte          (    )
+        .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
+        .pixel_armazenado(s_pixel_armazenado ),
+        .pixel           (pixel)
        
 
     );

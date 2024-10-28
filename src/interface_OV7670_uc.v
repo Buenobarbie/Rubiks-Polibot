@@ -22,7 +22,7 @@ module interface_OV7670_uc (
     input wire       transmite_frame, 
     input wire       transmite_byte,
     input wire       pixel_armazenado,
-    input wire       fim_linha_quadrante,
+    input wire       fim_coluna_quadrante,
     output reg       byte_estavel,
     output reg       zera_linha_pixel,
     output reg       zera_coluna_pixel,
@@ -65,25 +65,25 @@ module interface_OV7670_uc (
             espera_linha:    Eprox = VSYNC ? inicial : (HREF ? atualiza_linha : espera_linha);
             atualiza_linha:  Eprox = espera_byte;
             espera_byte:     Eprox = ~HREF ? espera_linha : (transmite_byte ? armazena_byte : espera_byte);
-            armazena_byte:   Eprox = ~pixel_armazenado ? atualiza_coluna : (fim_linha_quadrante ? atualiza_coluna_quadrante : atualiza_linha_quadrante);
+            armazena_byte:   Eprox = ~pixel_armazenado ? atualiza_coluna : (fim_coluna_quadrante ? atualiza_linha_quadrante : atualiza_coluna_quadrante);
             atualiza_coluna: Eprox = espera_byte;
-            atualiza_linha_quadrante:  Eprox = atualiza_coluna;
-            atualiza_coluna_quadrante: Eprox = atualiza_linha_quadrante;
+            atualiza_linha_quadrante:  Eprox = atualiza_coluna_quadrante;
+            atualiza_coluna_quadrante: Eprox = atualiza_coluna;
             default:         Eprox = inicial;
         endcase
     end
 
     // Saídas de controle
     always @(*) begin
-        byte_estavel       = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
-        zera_linha_pixel    = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        zera_coluna_pixel   = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        zera_linha_quadrante    = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        zera_coluna_quadrante   = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        conta_linha_pixel   = (Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        conta_coluna_pixel  = (Eatual == atualiza_coluna) ? 1'b1 : 1'b0;
-        conta_linha_quadrante   = (Eatual == atualiza_linha_quadrante) ? 1'b1 : 1'b0;
-        conta_coluna_quadrante  = (Eatual == atualiza_coluna_quadrante) ? 1'b1 : 1'b0;
+        byte_estavel           = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
+        zera_linha_pixel       = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        zera_coluna_pixel      = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
+        zera_linha_quadrante   = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        zera_coluna_quadrante  = (Eatual == espera_frame) ? 1'b1 : 1'b0;
+        conta_linha_pixel      = (Eatual == atualiza_linha) ? 1'b1 : 1'b0;
+        conta_coluna_pixel     = (Eatual == atualiza_coluna) ? 1'b1 : 1'b0;
+        conta_linha_quadrante  = (Eatual == atualiza_linha_quadrante) ? 1'b1 : 1'b0;
+        conta_coluna_quadrante = (Eatual == atualiza_coluna_quadrante) ? 1'b1 : 1'b0;
 
         case (Eatual)
             inicial:         db_estado = 4'b0000;
