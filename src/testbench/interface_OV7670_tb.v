@@ -16,16 +16,17 @@ module interface_OV7670_tb;
     wire        XCLK_out;
     wire        PWDN_out;
     wire [3:0]  db_estado_out;
+    wire [15:0] pixel_out;
 
 
 
     // Componente a ser testado (Device Under Test -- DUT)
     interface_OV7670  #(
-        .LINES   (2),
-        .COLUMNS (2),
-        .S_DATA  (8),
-        .S_LINE  (1),
-        .S_COLUMN(1)
+        .LINES   (140),
+        .COLUMNS (320),
+        .S_DATA  (16),
+        .S_LINE  (8),
+        .S_COLUMN(9)
     )ut (
         .clock  (clock_in),
         .reset  (reset_in),
@@ -38,7 +39,8 @@ module interface_OV7670_tb;
         .SDIOD  (SDIOD_out),
         .XCLK   (XCLK_out),
         .PWDN   (PWDN_out),
-        .db_estado(db_estado_out)
+        .db_estado(db_estado_out),
+        .pixel  (pixel_out)
     );
 
 
@@ -46,6 +48,7 @@ module interface_OV7670_tb;
     // Configurações do clock
     parameter clockPeriod = 20; // clock de 50MHz
     integer caso;
+    integer i, j;
     
     // Gerador de clock
     always #(clockPeriod/2) clock_in = ~clock_in;
@@ -59,78 +62,70 @@ module interface_OV7670_tb;
         #100 reset_in = 0;
 
         // Iniciar
+        caso = 1
         iniciar_in = 1;
+        PCLK_in = 0;
+        HREF_in = 0;
+        VSYNC_in = 1;
+        #(5*clockPeriod) 
 
         // Inicio da transmissão do frame
         VSYNC_in = 0;
-        #10
+        #(5*clockPeriod) 
 
-        // Inicio da transmissão da linha 1
-        HREF_in = 1;
-        #10
-        // Byte 1
-        D_in = 8'b10101010;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
+        for(i=0; i<140; i = i+1) begin
+            // Inicio da transmissão da linha
+            HREF_in = 1;
+            #(5*clockPeriod) 
 
-        // Byte 2
-        D_in = 8'b01010101;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
+            for(j=0; j<320; j=j+1) begin
+                caso = caso + 1;
+                if (i == 32 && j == 65) begin
+                    D_in = 8'b00000001;
+                end
+                else if (i == 79 && j == 65) begin
+                    D_in = 8'b00000010;
+                end
+                else if (i == 126 && j == 65) begin
+                    D_in = 8'b00000011;
+                end
+                else if (i == 32 && j == 139) begin
+                    D_in = 8'b00000100;
+                end
+                else if (i == 79 && j == 139) begin
+                    D_in = 8'b00000101;
+                end
+                else if (i == 126 && j == 139) begin
+                    D_in = 8'b00000110;
+                end
+                else if (i == 32 && j == 233) begin
+                    D_in = 8'b00000111;
+                end
+                else if (i == 79 && j == 233) begin
+                    D_in = 8'b00001000;
+                end
+                else if (i == 126 && j == 233) begin
+                    D_in = 8'b00001001;
+                end
+                else begin
+                    D_in = 8'b00000000;
+                end
+                D_in = 8'b00000000;
+                PCLK_in = 1;
+                #(5*clockPeriod) 
+                PCLK_in = 0;
+                
+            end
 
-        // Byte 3
-        D_in = 8'b11001100;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-
-        // Byte 4
-        D_in = 8'b00110011;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-
-        // Fim da transmissão da linha 1
-        HREF_in = 0;
-        #10
-
-        // Inicio da transmissão da linha 2
-        HREF_in = 1;
-        #10
-
-        // Byte 1
-        D_in = 8'b11110000;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-        
-        // Byte 2
-        D_in = 8'b00001111;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-
-        // Byte 3
-        D_in = 8'b11110000;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-
-        // Byte 4
-        D_in = 8'b00001111;
-        PCLK_in = 1;
-        #10
-        PCLK_in = 0;
-
-        // Fim da transmissão da linha 2
-        HREF_in = 0;
-        #10
+            // Fim da transmissão da linha
+            HREF_in = 0;
+            #(5*clockPeriod) 
+        end
+       
 
         // Fim da transmissão do frame
         VSYNC_in = 1;
-        #10
+        #(5*clockPeriod) 
 
 
         // Fim da simulação
