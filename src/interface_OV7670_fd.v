@@ -34,6 +34,7 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     output wire        transmite_byte,
     output wire        fim_coluna_quadrante,
     output wire        escreve_byte,
+    output wire        XCLK,
     output wire [15:0] pixel
 );
 
@@ -167,6 +168,20 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
         .addr_line   (linha_quadrante_addr   ),
         .addr_column (coluna_quadrante_addr  ),
         .q           (pixel     )
+    );
+
+     // Contador para clock de 1MHz
+    contador_m #(
+        .M(50), 
+        .N(6)
+    ) contador_linha_quadrante (
+        .clock    (clock         ),
+        .zera_as  (reset   ),
+        .zera_s   (reset   ),
+        .conta    (clock   ),
+        .Q        (    ),
+        .fim      (XCLK),
+        .meio     (    )
     );
 
 endmodule

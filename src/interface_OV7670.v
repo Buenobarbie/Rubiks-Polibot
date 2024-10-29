@@ -39,6 +39,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     output wire      SDIOD,
     output wire      XCLK,
     output wire      PWDN,
+    output wire      RESET,
     output wire [3:0] db_estado ,
     output wire [15:0] pixel
 );
@@ -64,6 +65,12 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     wire s_conta_coluna_quadrante;
     wire s_escreve_byte;
     wire s_we_byte;
+
+    // Sinais da camera
+    assign SDIOC = 1'b0;
+    assign SDIOD = 1'b0;
+    assign PWDN  = 1'b0;
+    assign RESET = 1'b1;
     
 
 
@@ -126,6 +133,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .transmite_byte  (s_transmite_byte ),
         .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
         .escreve_byte    (s_escreve_byte),
+        .XCLK            (XCLK),
         .pixel           (pixel)
        
 
