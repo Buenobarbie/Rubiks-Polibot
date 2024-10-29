@@ -4,6 +4,9 @@ em uma outra memória as 9 cores correspondentes
 Entradas:
     valor do pixel lido da memória
 
+    3x3 pixels (1,2)
+    6x 3x3 cores   (1,2)
+
 Saída: 
     - endereço da linha e coluna para ler o pixel
         e para escrever a cor
@@ -19,8 +22,11 @@ Componentes:
     - Contador de cores (6) -> addr_cor
     - memória de cores (externa): 6 faces x 3 x 3 com valores de 3bits
     - rom de quadrados: 0 a 63 espaços. Cada um conterá o quadrado do endereço. Rom que permite ler 3 endereços
-    - rom das cores
+    - rom das cores 6 cores que armazena 16 bits (RGB)
     - ram de distancia cores com 6 saídas sempre e um endereço de escrita
+ 
+rom[4] => 16
+rom[5] => 25
 
 
 Lógica:
@@ -35,16 +41,30 @@ soma regA + regB + regC -> cor0
 ... -> cor5
 
 
-    - dividir o pixel em R,G,B
-    - dividir a saída do contador de cores
+    - dividir o pixel em R,G,B 565 6bits -> 64 valores
+    - dividir a saída do contador de cores em R,G,B
     - colocar as saídas em 3 absdiff
-        absdiff(6) -> rom[] -> diff² -> sum3Numbers 0
-        absdiff(6) -> rom[] -> diff² -> sum3Numbers 1
-        absdiff(6) -> rom[] -> diff² -> sum3Numbers 2
-        salvar resultado na ram distancia cores (addr_cores)
+        absdiff(6) R -> rom[] -> diff² -> sum3Numbers 0
+        absdiff(6) G -> rom[] -> diff² -> sum3Numbers 1  -> distancia_euclidiana²
+        absdiff(6) B -> rom[] -> diff² -> sum3Numbers 2
+        salvar resultado na ram distancia_cores (addr_cores)
     - incrementar contador de cores
     - fazer isso para todas as cores
 
+
+
+    -addr_escrita    -dist_cor0   comparador 0 e 1 -> c0
+    - we             -dist_cor1                             comparador 01 e 23 -> c3
+                     -dist_cor2   comparador 2 e 3 -> c1
+                     -dist_cor3                                                        comparador 0123 e 45 -> c4
+                     -dist_cor4   comparador 4 e 5 -> c2
+                     -dist_cor5    
+
+c0
+c1
+c2   -> b2,b1,b0 (cor) 
+c3
+c4
 
     
 
