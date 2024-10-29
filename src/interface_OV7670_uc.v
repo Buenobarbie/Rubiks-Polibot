@@ -21,9 +21,10 @@ module interface_OV7670_uc (
     input wire       HREF,
     input wire       transmite_frame, 
     input wire       transmite_byte,
-    input wire       pixel_armazenado,
     input wire       fim_coluna_quadrante,
+    input wire       escreve_byte,
     output reg       byte_estavel,
+    output reg       we_byte,
     output reg       zera_linha_pixel,
     output reg       zera_coluna_pixel,
     output reg       zera_linha_quadrante,
@@ -44,6 +45,7 @@ module interface_OV7670_uc (
     parameter espera_linha    = 4'b0010;
     parameter atualiza_linha  = 4'b0011;
     parameter espera_byte     = 4'b0100;
+    parameter le_byte         = 4'b1001;
     parameter armazena_byte   = 4'b0101;
     parameter atualiza_coluna = 4'b0110;
     parameter atualiza_linha_quadrante  = 4'b0111;
@@ -64,8 +66,9 @@ module interface_OV7670_uc (
             espera_frame:    Eprox = transmite_frame ? espera_linha : espera_frame;
             espera_linha:    Eprox = VSYNC ? inicial : (HREF ? atualiza_linha : espera_linha);
             atualiza_linha:  Eprox = espera_byte;
-            espera_byte:     Eprox = ~HREF ? espera_linha : (transmite_byte ? armazena_byte : espera_byte);
-            armazena_byte:   Eprox = ~pixel_armazenado ? atualiza_coluna : (fim_coluna_quadrante ? atualiza_linha_quadrante : atualiza_coluna_quadrante);
+            espera_byte:     Eprox = ~HREF ? espera_linha : (transmite_byte ? le_byte : espera_byte);
+            le_byte:         Eprox = (escreve_byte) ? armazena_byte : atualiza_coluna;
+            armazena_byte:   Eprox = (fim_coluna_quadrante ? atualiza_linha_quadrante : atualiza_coluna_quadrante);
             atualiza_coluna: Eprox = espera_byte;
             atualiza_linha_quadrante:  Eprox = atualiza_coluna_quadrante;
             atualiza_coluna_quadrante: Eprox = atualiza_coluna;
@@ -75,7 +78,8 @@ module interface_OV7670_uc (
 
     // Saídas de controle
     always @(*) begin
-        byte_estavel           = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
+        byte_estavel           = (Eatual == le_byte) ? 1'b1 : 1'b0;
+        we_byte                = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
         zera_linha_pixel       = (Eatual == espera_frame) ? 1'b1 : 1'b0;
         zera_coluna_pixel      = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
         zera_linha_quadrante   = (Eatual == espera_frame) ? 1'b1 : 1'b0;

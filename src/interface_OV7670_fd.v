@@ -21,6 +21,7 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     input wire         PCLK,
     input wire [7:0]   D,
     input wire         byte_estavel,
+    input wire         we_byte,
     input wire         zera_linha_pixel,
     input wire         zera_coluna_pixel,
     input wire         conta_linha_pixel,
@@ -32,8 +33,8 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     output wire        transmite_frame,
     output wire        transmite_byte,
     output wire        fim_coluna_quadrante,
-    output wire        pixel_armazenado,
-    output wire [15:0]  pixel
+    output wire        escreve_byte,
+    output wire [15:0] pixel
 );
 
     // Sinais de controle
@@ -112,9 +113,7 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     );
 
     // Verifica se o byte deve ser armazenado
-    assign we = match_linha && match_coluna && byte_estavel;
-    assign pixel_armazenado = we;
-
+    assign escreve_byte = match_linha && match_coluna;
 
     // Contador de linhas do quadrante armazenado
     contador_m #(
@@ -163,7 +162,7 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     ) memoria (
         .clk         (clock        ),
         .clear       (reset        ),
-        .we          (we     ),
+        .we          (we_byte     ),
         .data        (s_byte            ),
         .addr_line   (linha_quadrante_addr   ),
         .addr_column (coluna_quadrante_addr  ),

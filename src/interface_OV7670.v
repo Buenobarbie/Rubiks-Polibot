@@ -52,7 +52,6 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     wire s_zera_coluna;
     wire s_conta_linha;
     wire s_conta_coluna;
-    wire s_pixel_armazenado;
     wire s_fim_coluna_quadrante;
     wire s_byte_estavel;
     wire s_zera_linha_pixel;
@@ -63,6 +62,8 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     wire s_conta_coluna_pixel;
     wire s_conta_linha_quadrante;
     wire s_conta_coluna_quadrante;
+    wire s_escreve_byte;
+    wire s_we_byte;
     
 
 
@@ -83,9 +84,10 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .HREF            (HREF             ),
         .transmite_frame (s_transmite_frame),
         .transmite_byte  (s_transmite_byte ),
-        .pixel_armazenado(s_pixel_armazenado ),
         .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
+        .escreve_byte    (s_escreve_byte      ),
         .byte_estavel    ( s_byte_estavel   ),
+        .we_byte         ( s_we_byte      ),
         .zera_linha_pixel( s_zera_linha_pixel),
         .zera_coluna_pixel( s_zera_coluna_pixel),
         .zera_linha_quadrante( s_zera_linha_quadrante),
@@ -111,6 +113,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .PCLK            (PCLK ),
         .D               (D    ),
         .byte_estavel    (s_byte_estavel   ),
+        .we_byte         ( s_we_byte     ),
         .zera_linha_pixel( s_zera_linha_pixel),
         .zera_coluna_pixel( s_zera_coluna_pixel),
         .conta_linha_pixel( s_conta_linha_pixel),
@@ -122,7 +125,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .transmite_frame (s_transmite_frame),
         .transmite_byte  (s_transmite_byte ),
         .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
-        .pixel_armazenado(s_pixel_armazenado ),
+        .escreve_byte    (s_escreve_byte),
         .pixel           (pixel)
        
 
