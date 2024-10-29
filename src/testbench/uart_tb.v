@@ -18,7 +18,6 @@ module uart_tb;
         .dados_ascii     ( dados_ascii_8_in ),
         .saida_serial    ( saida_serial_out ),
         .pronto          ( pronto_out       ),
-        .db_clock        (                  ), // Porta aberta (desconectada)
         .db_tick         (                  ), // Porta aberta (desconectada)
         .db_partida      (                  ), // Porta aberta (desconectada)
         .db_saida_serial (                  ), // Porta aberta (desconectada)

@@ -1,9 +1,9 @@
 
-module tx_serial_7O1 (
+module uart (
     input        clock           ,
     input        reset           ,
     input        partida         , // entradas
-    input [6:0]  dados_ascii     ,
+    input [7:0]  dados_ascii     ,
     output       saida_serial    , // saidas
     output       pronto          ,
     output       db_tick         ,
@@ -27,7 +27,7 @@ module tx_serial_7O1 (
     assign s_partida = partida;
 	 
     // fluxo de dados
-    tx_serial_7O1_fd U1_FD (
+    uart_fd U1_FD (
         .clock        ( clock          ),
         .reset        ( s_reset        ),
         .zera         ( s_zera         ),
@@ -40,7 +40,7 @@ module tx_serial_7O1 (
     );
 
     // unidade de controle
-    tx_serial_uc U2_UC (
+    uart_uc U2_UC (
         .clock     ( clock        ),
         .reset     ( s_reset      ),
         .partida   ( s_partida    ),
