@@ -26,7 +26,7 @@
 // RESET	Input	     Reset (Active low)
 // PWDN	    Input	     Power down (Active high)
  
-module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8, S_COLUMN=9)
+module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7, S_COLUMN=9)
 (
     input wire       clock,
     input wire       reset,

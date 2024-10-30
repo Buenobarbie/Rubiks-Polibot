@@ -26,10 +26,10 @@ module interface_OV7670_tb;
 
     // Componente a ser testado (Device Under Test -- DUT)
     interface_OV7670  #(
-        .LINES   (140),
+        .LINES   (120),
         .COLUMNS (320),
         .S_DATA  (16),
-        .S_LINE  (8),
+        .S_LINE  (7),
         .S_COLUMN(9)
     )ut (
         .clock  (clock_in),
@@ -81,7 +81,7 @@ module interface_OV7670_tb;
         VSYNC_in = 0;
         #(5*clockPeriod) ;
 
-        for(i=0; i<140; i = i+1) begin
+        for(i=0; i<120; i = i+1) begin
             // Inicio da transmissão da linha
             HREF_in = 1;
             #(10*clockPeriod) ;

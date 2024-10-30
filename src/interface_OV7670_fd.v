@@ -93,21 +93,23 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
     );
 
     // Matchers
+    // LINHA
     pixel_matcher #(
         .N(S_LINE),
-        .VALUE1(32),
-        .VALUE2(79),
-        .VALUE3(126)
+        .VALUE1(19),
+        .VALUE2(59),
+        .VALUE3(99)
     ) matcher_linha (
         .value (linha_pixel),
         .match (match_linha)
     );
 
+    // COLUNA
     pixel_matcher #(
         .N(S_COLUMN),
-        .VALUE1(65),
-        .VALUE2(139),
-        .VALUE3(233)
+        .VALUE1(79),
+        .VALUE2(159),
+        .VALUE3(239)
     ) matcher_coluna (
         .value (coluna_pixel),
         .match (match_coluna)
