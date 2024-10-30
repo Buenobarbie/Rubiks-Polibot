@@ -35,13 +35,20 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     input wire       HREF,
     input wire       PCLK,
     input wire [7:0] D,
-    output wire      SDIOC,
-    output wire      SDIOD,
+    input wire       SDIOC,
+    input wire       SDIOD,
     output wire      XCLK,
     output wire      PWDN,
     output wire      RESET,
-    output wire [3:0] db_estado ,
-    output wire [15:0] pixel
+    output wire [6:0] db_estado ,
+    output wire [6:0] hex0_pixel,
+    output wire [6:0] hex1_pixel,
+    output wire [6:0] hex2_pixel,
+    output wire [6:0] hex3_pixel,
+	 output wire db_vsync,
+	 output wire db_href,
+	 output wire db_pclock,
+	 output wire db_xclock
 );
 
     // Sinais internos
@@ -65,10 +72,10 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     wire s_conta_coluna_quadrante;
     wire s_escreve_byte;
     wire s_we_byte;
+	 wire [3:0] s_db_estado;
+	 wire [15:0] s_pixel;
 
     // Sinais da camera
-    assign SDIOC = 1'b0;
-    assign SDIOD = 1'b0;
     assign PWDN  = 1'b0;
     assign RESET = 1'b1;
     
@@ -78,7 +85,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
     edge_detector edge_iniciar (
         .clock  (clock ),
         .reset  (reset ),
-        .sinal  (iniciar),
+        .sinal  (~iniciar),
         .pulso  (s_iniciar)
     );
 
@@ -103,7 +110,7 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .conta_coluna_pixel( s_conta_coluna_pixel),
         .conta_linha_quadrante( s_conta_linha_quadrante),
         .conta_coluna_quadrante( s_conta_coluna_quadrante),
-        .db_estado       ( db_estado        )
+        .db_estado       ( s_db_estado        )
     );
 
     // Fluxo de dados
@@ -134,8 +141,40 @@ module interface_OV7670 #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE=8,
         .fim_coluna_quadrante ( s_fim_coluna_quadrante ),
         .escreve_byte    (s_escreve_byte),
         .XCLK            (XCLK),
-        .pixel           (pixel)
+        .pixel           (s_pixel)
        
 
     );
+	 
+	 hexa7seg hexa5_estado (
+		.hexa(s_db_estado),
+		.display(db_estado)
+	 );
+	 
+	 hexa7seg hexa0_pixel_0_3 (
+		.hexa(s_pixel[3:0]),
+		.display(hex0_pixel)
+	 );
+	 
+	 hexa7seg hexa1_pixel_4_7 (
+		.hexa(s_pixel[7:4]),
+		.display(hex1_pixel)
+	 );
+	 
+	 hexa7seg hexa2_pixel_8_11 (
+		.hexa(s_pixel[11:8]),
+		.display(hex2_pixel)
+	 );
+	 
+	 hexa7seg hexa3_pixel_12_15 (
+		.hexa(s_pixel[15:12]),
+		.display(hex3_pixel)
+	 );
+	 
+	 assign db_vsync = VSYNC;
+	 assign db_href = HREF;
+	 assign db_pclock = PCLK;
+	 assign db_xclock = XCLK;
+	 
+	 
 endmodule

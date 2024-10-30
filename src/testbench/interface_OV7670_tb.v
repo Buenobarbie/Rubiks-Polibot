@@ -6,7 +6,7 @@ module interface_OV7670_tb;
     // Declaração de sinais
     reg         clock_in = 0;
     reg         reset_in = 0;
-    reg         iniciar_in = 0;
+    reg         iniciar_in = 1;
     reg         VSYNC_in = 1;
     reg         HREF_in = 0;
     reg         PCLK_in = 0;
@@ -15,8 +15,12 @@ module interface_OV7670_tb;
     wire        SDIOD_out;
     wire        XCLK_out;
     wire        PWDN_out;
-    wire [3:0]  db_estado_out;
-    wire [15:0] pixel_out;
+    wire [6:0]  db_estado_out;
+	 wire [6:0] hex0_pixel;
+    wire [6:0] hex1_pixel;
+    wire [6:0] hex2_pixel;
+    wire [6:0] hex3_pixel;
+	 wire db_xclock_out;
 
 
 
@@ -40,7 +44,11 @@ module interface_OV7670_tb;
         .XCLK   (XCLK_out),
         .PWDN   (PWDN_out),
         .db_estado(db_estado_out),
-        .pixel  (pixel_out)
+		  .hex0_pixel (hex0_pixel),
+		  .hex1_pixel (hex1_pixel),
+		  .hex2_pixel (hex2_pixel),
+		  .hex3_pixel (hex3_pixel),
+		  .db_xclock  (db_xclock_out)
     );
 
 
@@ -63,7 +71,7 @@ module interface_OV7670_tb;
 
         // Iniciar
         caso = 1;
-        iniciar_in = 1;
+        iniciar_in = 0;
         PCLK_in = 0;
         HREF_in = 0;
         VSYNC_in = 1;
@@ -76,44 +84,44 @@ module interface_OV7670_tb;
         for(i=0; i<140; i = i+1) begin
             // Inicio da transmissão da linha
             HREF_in = 1;
-            #(5*clockPeriod) ;
+            #(10*clockPeriod) ;
 
             for(j=0; j<320; j=j+1) begin
                 caso = caso + 1;
-                if (i == 32 && j == 65) begin
-                    D_in = 8'b00000001;
+                if (i == 31 && j == 65) begin
+                    D_in = 8'b11000001;
                 end
-                else if (i == 79 && j == 65) begin
+                else if (i == 78 && j == 65) begin
                     D_in = 8'b00000010;
                 end
-                else if (i == 126 && j == 65) begin
+                else if (i == 125 && j == 65) begin
                     D_in = 8'b00000011;
                 end
-                else if (i == 32 && j == 139) begin
+                else if (i == 31 && j == 139) begin
                     D_in = 8'b00000100;
                 end
-                else if (i == 79 && j == 139) begin
+                else if (i == 78 && j == 139) begin
                     D_in = 8'b00000101;
                 end
-                else if (i == 126 && j == 139) begin
+                else if (i == 125 && j == 139) begin
                     D_in = 8'b00000110;
                 end
-                else if (i == 32 && j == 233) begin
+                else if (i == 31 && j == 233) begin
                     D_in = 8'b00000111;
                 end
-                else if (i == 79 && j == 233) begin
+                else if (i == 78 && j == 233) begin
                     D_in = 8'b00001000;
                 end
-                else if (i == 126 && j == 233) begin
+                else if (i == 125 && j == 233) begin
                     D_in = 8'b00001001;
                 end
                 else begin
                     D_in = 8'b00000000;
                 end
                 PCLK_in = 1;
-                #(5*clockPeriod) ;
+                #(10*clockPeriod) ;
                 PCLK_in = 0;
-                #(5*clockPeriod) ;
+                #(10*clockPeriod) ;
                 
             end
 

@@ -172,13 +172,13 @@ module interface_OV7670_fd #(parameter LINES=140, COLUMNS=320, S_DATA=16, S_LINE
 
      // Contador para clock de 1MHz
     contador_m #(
-        .M(50), 
-        .N(6)
-    ) contador_linha_quadrante (
-        .clock    (clock         ),
-        .zera_as  (reset   ),
-        .zera_s   (reset   ),
-        .conta    (clock   ),
+        .M(5), 
+        .N(3)
+    ) contador_clock (
+        .clock    (clock),
+        .zera_as  (reset),
+        .zera_s   (reset),
+        .conta    (1'b1),
         .Q        (    ),
         .fim      (XCLK),
         .meio     (    )
