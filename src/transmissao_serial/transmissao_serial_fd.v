@@ -7,8 +7,8 @@
     input wire       conta_coluna  ,
     input wire       zera_linha    ,
     input wire       zera_coluna   ,
-    input wire       zera_shift    , 
     output wire      saida_serial  ,
+    output wire      shift_serial  ,
     output wire      fim_coluna    ,
     output wire      fim_linha     ,
     output wire      pronto        
@@ -18,7 +18,9 @@
     wire [7:0]  dados_serial;
     wire [1:0]  addr_linha;
     wire [1:0]  addr_coluna;
-    wire shift_serial;
+    wire s_shift_serial;
+
+    assign shift_serial = s_shift_serial;
 
    // Instancia UART
    uart uart(
@@ -54,7 +56,7 @@
    // Instancia MUX serial 
    mux_serial mux (
        .16_bits (dados_pixel ),
-       .shift   (shift_serial),
+       .shift   (s_shift_serial),
        .8_bits  (dados_serial),
    );
 
@@ -63,7 +65,7 @@
        .clk   (clock),
        .clear (  ),
        .t     (flipa),
-       .q     (shift_serial)
+       .q     (s_shift_serial)
    );
     
     // Instancia contador de linhas da RAM
