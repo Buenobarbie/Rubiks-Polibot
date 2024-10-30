@@ -66,7 +66,7 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
 
     // Contador de linhas dos pixels lidos
     contador_m #(
-        .M(LINES), 
+        .M(LINES+1), 
         .N(S_LINE)
     ) contador_linha_pixel (
         .clock    (clock         ),
@@ -96,9 +96,9 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     // LINHA
     pixel_matcher #(
         .N(S_LINE),
-        .VALUE1(19),
-        .VALUE2(59),
-        .VALUE3(99)
+        .VALUE1(20),
+        .VALUE2(60),
+        .VALUE3(100)
     ) matcher_linha (
         .value (linha_pixel),
         .match (match_linha)
