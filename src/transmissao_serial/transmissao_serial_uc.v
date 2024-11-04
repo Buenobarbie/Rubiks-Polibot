@@ -1,4 +1,4 @@
-module uart_uc ( 
+module transmissao_serial_uc ( 
     input      clock       ,
     input      reset       ,
     input      iniciar     ,
@@ -9,7 +9,7 @@ module uart_uc (
     output reg flipa         ,
     output reg partida_serial, 
     output reg conta_linha   , 
-    output reg contra_coluna , 
+    output reg conta_coluna , 
     output reg zera_linha    ,
     output reg zera_coluna   ,
     output reg [3:0] db_estado
@@ -41,9 +41,9 @@ module uart_uc (
             inicial            : Eprox = iniciar ? preparacao : inicial;
             preparacao         : Eprox = transmissao_serial;
             transmissao_serial : Eprox = espera_serial;
-            espera_serial      : Eprox = ~pronto ? espera_serial : (shift_serial ? conta_coluna : atualiza_shift);
+            espera_serial      : Eprox = ~pronto ? espera_serial : (shift_serial ? conta_coluna_pixel : atualiza_shift);
             atualiza_shift     : Eprox = transmissao_serial;
-            conta_coluna_pixel : Eprox = fim_coluna ? conta_linha : transmissao_serial;
+            conta_coluna_pixel : Eprox = fim_coluna ? conta_linha_pixel : transmissao_serial;
             conta_linha_pixel  : Eprox = fim_linha ? inicial : transmissao_serial;
             default            : Eprox = inicial;
         endcase
@@ -57,7 +57,7 @@ module uart_uc (
         conta_linha    = (Eatual == conta_linha_pixel) ? 1'b1 : 1'b0;
         partida_serial = (Eatual == transmissao_serial) ? 1'b1 : 1'b0;
         flipa          = (Eatual == atualiza_shift ||
-                          Eatual == conta_coluna) ? 1'b1 : 1'b0; 
+                          Eatual == conta_coluna_pixel) ? 1'b1 : 1'b0; 
        
         // Saida de depuracao (estado)
         case (Eatual)

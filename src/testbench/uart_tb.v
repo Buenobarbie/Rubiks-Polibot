@@ -11,7 +11,7 @@ module uart_tb;
     wire      pronto_out;
 
     // componente a ser testado (Device Under Test -- DUT)
-    uart_tb dut (
+    uart dut (
         .clock           ( clock_in         ),
         .reset           ( reset_in         ),
         .partida         ( partida_in       ),

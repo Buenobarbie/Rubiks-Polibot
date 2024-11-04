@@ -8,8 +8,8 @@ module flip_flopT (
     always @ (posedge clk) begin 
       if (clear)
         q <= 1'b0;
-      else
-        if(t)
+      
+        if(t)else
           q <= ~q; 
         else 
           q <= q; 

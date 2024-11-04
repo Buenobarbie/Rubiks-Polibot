@@ -31,7 +31,7 @@ module transmissao_serial (
     assign s_iniciar = iniciar;
 	 
     // fluxo de dados
-    uart_fd U1_FD (
+    transmissao_serial_fd U1_FD (
         .clock          ( clock           ),
         .reset          ( s_reset         ),
         .partida_serial ( s_partida_serial),
@@ -48,7 +48,7 @@ module transmissao_serial (
     );
 
     // unidade de controle
-    uart_uc U2_UC (
+    transmissao_serial_uc U2_UC (
         .clock          ( clock           ),
         .reset          ( s_reset         ),
         .iniciar        ( s_iniciar       ),
@@ -72,7 +72,7 @@ module transmissao_serial (
 
     // saidas
     assign saida_serial = s_saida_serial;
-    assign s_fim_linha = fim;
+    assign fim = s_fim_linha;
 
     // depuracao
     // precisa ter tick??

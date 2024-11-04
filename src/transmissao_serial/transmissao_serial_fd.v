@@ -55,29 +55,29 @@
 
    // Instancia MUX serial 
    mux_serial mux (
-       .16_bits (dados_pixel ),
+       .hexa_bits (dados_pixel ),
        .shift   (s_shift_serial),
-       .8_bits  (dados_serial),
+       .oct_bits  (dados_serial)
    );
 
    // Instancia flip-flop-T
    flip_flopT flip_flopT (
        .clk   (clock),
-       .clear (  ),
+       .clear (reset ),
        .t     (flipa),
        .q     (s_shift_serial)
    );
     
     // Instancia contador de linhas da RAM
     contador_m #(
-        .M(3),
+        .M(4),
         .N(2)
     ) contador_linhas (
         .clock   (clock),
         .zera_as (zera_linha ),
         .zera_s  (zera_linha ),
         .conta   (conta_linha),
-        .Q       (addr_linha )   
+        .Q       (addr_linha ),   
         .fim     (fim_linha  ),
         .meio    (  )  
     );
