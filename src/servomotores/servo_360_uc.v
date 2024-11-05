@@ -3,10 +3,10 @@ module servo_360_uc (
     input      reset       ,
     input      iniciar     ,
     input      fim_timer   ,
-    output     gira        ,
-    output     conta_timer , 
-    output     zera_timer  , 
-    output     pronto      ,
+    output reg gira        ,
+    output reg conta_timer , 
+    output reg zera_timer  , 
+    output reg pronto      ,
     output reg [2:0] db_estado
 );
 
@@ -40,7 +40,7 @@ module servo_360_uc (
 
     // Logica de saida (maquina de Moore)
     always @* begin
-        gira     = (Eatual == girando) ? 1'b1 : 1'b0;
+        gira        = (Eatual == girando) ? 1'b1 : 1'b0;
         conta_timer = (Eatual == girando) ? 1'b1 : 1'b0;
         zera_timer  = (Eatual == preparacao) ? 1'b1 : 1'b0;
         pronto      = (Eatual == fim) ? 1'b1 : 1'b0;
