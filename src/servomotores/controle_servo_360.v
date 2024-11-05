@@ -1,4 +1,4 @@
-module controle_servo_180 (
+module controle_servo_360 (
     input wire clock,
     input wire reset,
     input wire [1:0] posicao,
