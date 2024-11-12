@@ -1,5 +1,3 @@
-
- 
 module circuito_pwm #(         // valores default
     parameter conf_periodo = 1250, // Período do sinal PWM [1250 => f=4KHz (25us)]
     parameter largura_0   = 0,     // Largura do pulso p/ 000 [0 => 0]
@@ -18,7 +16,7 @@ always @(posedge clock or posedge reset) begin
     if (reset) begin
         contagem <= 0;
         pwm <= 0;
-        largura_pwm <= largura_00; // Valor inicial da largura do pulso
+        largura_pwm <= largura_0; // Valor inicial da largura do pulso
     end else begin
         // Saída PWM
         pwm <= (contagem < largura_pwm);
