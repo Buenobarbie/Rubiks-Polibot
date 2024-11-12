@@ -5,7 +5,7 @@
     input wire       conta_timer  , 
     input wire       gira         ,
     output wire      fim_timer    ,
-    output wire      pwm          ,
+    output wire      pwm          
 );
 
     // Instancia Controle Servo

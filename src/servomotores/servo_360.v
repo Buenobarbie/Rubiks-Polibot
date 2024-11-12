@@ -2,9 +2,9 @@ module servo_360(
     input        clock,
     input        reset,
     input        iniciar,
-    output       pronto,
-    output reg   pwm,
-    output reg [2:0] db_estado
+    output wire  pronto,
+    output wire  pwm,
+    output wire [2:0] db_estado
 );
 
   wire s_gira;
