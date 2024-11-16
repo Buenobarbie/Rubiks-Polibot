@@ -14,38 +14,35 @@
  */
  
 module interface_OV7670_uc (
-    input wire       clock,
-    input wire       reset,
-    input wire       iniciar,
-    input wire       VSYNC,
-    input wire       HREF,
-    input wire       transmite_frame, 
-    input wire       transmite_byte,
-    input wire       fim_coluna_quadrante,
-    input wire       escreve_byte,
-    output reg       byte_estavel,
-    output reg       we_byte,
-    output reg       zera_linha_pixel,
-    output reg       zera_coluna_pixel,
-    output reg       zera_linha_quadrante,
-    output reg       zera_coluna_quadrante,
-    output reg       conta_linha_pixel,
-    output reg       conta_coluna_pixel,
-    output reg       conta_linha_quadrante,
-    output reg       conta_coluna_quadrante,
-    output reg [3:0] db_estado 
+    input wire clock,
+    input wire reset,
+    input wire iniciar,
+    input wire fim_transmissao,
+    input wire fim_recepcao,
+    input wire escreve_byte,
+    input wire fim_coluna_quadrante,
+	 input wire fim_linha_quadrante,
+    output reg zera_linha_pixel,
+    output reg zera_coluna_pixel,
+    output reg zera_linha_quadrante,
+    output reg zera_coluna_quadrante,
+    output reg we_byte,
+    output reg conta_linha_quadrante,
+    output reg conta_coluna_quadrante,
+    output reg conta_coluna_pixel,
+    output reg partida_serial,
+    output reg [3:0] db_estado
 );
 
     // Tipos e sinais
     reg [3:0] Eatual, Eprox; 
 
     // Parâmetros para os estados
-    parameter inicial         = 4'b0000;
-    parameter espera_frame    = 4'b0001;
-    parameter espera_linha    = 4'b0010;
-    parameter atualiza_linha  = 4'b0011;
-    parameter espera_byte     = 4'b0100;
-    parameter le_byte         = 4'b1001;
+    parameter inicial             = 4'b0000;
+    parameter captura             = 4'b0001;
+    parameter transmite_serial    = 4'b0010;
+    parameter recebe_serial       = 4'b0011;
+    parameter le_byte             = 4'b0100;
     parameter armazena_byte   = 4'b0101;
     parameter atualiza_coluna = 4'b0110;
     parameter atualiza_linha_quadrante  = 4'b0111;
@@ -62,43 +59,45 @@ module interface_OV7670_uc (
     // Lógica de próximo estado
     always @(*) begin
         case (Eatual)
-            inicial:         Eprox = iniciar ? espera_frame : inicial;
-            espera_frame:    Eprox = transmite_frame ? espera_linha : espera_frame;
-            espera_linha:    Eprox = VSYNC ? inicial : (HREF ? atualiza_linha : espera_linha);
-            atualiza_linha:  Eprox = espera_byte;
-            espera_byte:     Eprox = ~HREF ? espera_linha : (transmite_byte ? le_byte : espera_byte);
+            inicial:         Eprox = iniciar ? captura : inicial;
+            captura:         Eprox = transmite_serial;
+            transmite_serial:Eprox = fim_transmissao ? recebe_serial : transmite_serial;
+            recebe_serial:   Eprox = fim_recepcao ? le_byte : recebe_serial;
             le_byte:         Eprox = (escreve_byte) ? armazena_byte : atualiza_coluna;
             armazena_byte:   Eprox = (fim_coluna_quadrante ? atualiza_linha_quadrante : atualiza_coluna_quadrante);
-            atualiza_coluna: Eprox = espera_byte;
+            atualiza_coluna: Eprox = recebe_serial;
             atualiza_linha_quadrante:  Eprox = atualiza_coluna_quadrante;
-            atualiza_coluna_quadrante: Eprox = atualiza_coluna;
+            atualiza_coluna_quadrante: Eprox = (fim_linha_quadrante)? inicial : atualiza_coluna;
+
             default:         Eprox = inicial;
         endcase
     end
 
     // Saídas de controle
     always @(*) begin
-        byte_estavel           = (Eatual == le_byte) ? 1'b1 : 1'b0;
-        we_byte                = (Eatual == armazena_byte) ? 1'b1 : 1'b0;
-        zera_linha_pixel       = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        zera_coluna_pixel      = (Eatual == espera_frame ||  Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        zera_linha_quadrante   = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        zera_coluna_quadrante  = (Eatual == espera_frame) ? 1'b1 : 1'b0;
-        conta_linha_pixel      = (Eatual == atualiza_linha) ? 1'b1 : 1'b0;
-        conta_coluna_pixel     = (Eatual == atualiza_coluna) ? 1'b1 : 1'b0;
-        conta_linha_quadrante  = (Eatual == atualiza_linha_quadrante) ? 1'b1 : 1'b0;
-        conta_coluna_quadrante = (Eatual == atualiza_coluna_quadrante) ? 1'b1 : 1'b0;
+        zera_linha_pixel              = (Eatual == captura);
+        zera_coluna_pixel             = (Eatual == captura);
+        zera_linha_quadrante    = (Eatual == captura);
+        zera_coluna_quadrante   = (Eatual == captura);
+        we_byte                 = (Eatual == armazena_byte);
+        conta_linha_quadrante   = (Eatual == atualiza_linha_quadrante);
+        conta_coluna_quadrante  = (Eatual == atualiza_coluna_quadrante);
+        conta_coluna_pixel      = (Eatual == atualiza_coluna);
+        partida_serial          = (Eatual == captura);
+
+
 
         case (Eatual)
             inicial:         db_estado = 4'b0000;
-            espera_frame:    db_estado = 4'b0001;
-            espera_linha:    db_estado = 4'b0010;
-            atualiza_linha:  db_estado = 4'b0011;
-            espera_byte:     db_estado = 4'b0100;
+            captura:         db_estado = 4'b0001;
+            transmite_serial:db_estado = 4'b0010;
+            recebe_serial:   db_estado = 4'b0011;
+            le_byte:         db_estado = 4'b0100;
             armazena_byte:   db_estado = 4'b0101;
             atualiza_coluna: db_estado = 4'b0110;
-            atualiza_linha_quadrante:   db_estado = 4'b0111;
-            atualiza_coluna_quadrante:  db_estado = 4'b1000;
+            atualiza_linha_quadrante:  db_estado = 4'b0111;
+            atualiza_coluna_quadrante: db_estado = 4'b1000;
+
             default:         db_estado = 4'b1001;
         endcase
     end

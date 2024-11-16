@@ -17,25 +17,25 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
 (
     input wire         clock,
     input wire         reset,
-    input wire         VSYNC,
-    input wire         PCLK,
-    input wire [7:0]   D,
-    input wire         byte_estavel,
-    input wire         we_byte,
     input wire         zera_linha_pixel,
     input wire         zera_coluna_pixel,
-    input wire         conta_linha_pixel,
     input wire         conta_coluna_pixel,
     input wire         zera_linha_quadrante,
     input wire         zera_coluna_quadrante,
-    input wire         conta_linha_quadrante,
-    input wire         conta_coluna_quadrante,
-    output wire        transmite_frame,
-    output wire        transmite_byte,
-    output wire        fim_coluna_quadrante,
+    input wire         we_byte,
+    input wire         rx_serial,
+    input wire         partida_serial,
+	 input wire         conta_linha_quadrante,
+	 input wire         conta_coluna_quadrante,
     output wire        escreve_byte,
-    output wire        XCLK,
+    output wire        fim_coluna_pixel,
+    output wire        fim_transmissao,
+	 output wire         fim_recepcao,
+    output wire        saida_serial,
+	 output wire        fim_linha_quadrante,
+	 output wire [3:0]  db_coluna_addr,
     output wire [15:0] pixel
+
 );
 
     // Sinais de controle
@@ -46,31 +46,23 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     wire                match_linha;
     wire                match_coluna;
     wire                we;
-    wire [15:0]         s_byte;
+    wire                fim_coluna_quadrante;
+    wire [15:0]         s_pixel;
+    wire conta_linha_pixel;
+    wire s_fim_coluna_pixel;
+	 wire [7:0] s_byte;
+	 wire s_fim_coluna_quadrante;
 
 
-    // Edge detector
-    edge_detector edge_frame (
-        .clock  (clock ),
-        .reset  (reset ),
-        .sinal  (~VSYNC),
-        .pulso(transmite_frame)
-    );
-
-    edge_detector edge_byte (
-        .clock  (clock),
-        .reset  (reset),
-        .sinal  (PCLK ),
-        .pulso(transmite_byte)
-    );
+    assign conta_linha_pixel = conta_coluna_pixel && s_fim_coluna_pixel;
 
     // Contador de linhas dos pixels lidos
     contador_m #(
-        .M(LINES+1), 
+        .M(LINES), 
         .N(S_LINE)
     ) contador_linha_pixel (
         .clock    (clock         ),
-        .zera_as  (zera_linha_pixel   ),
+        .zera_as  (reset   ),
         .zera_s   (zera_linha_pixel   ),
         .conta    (conta_linha_pixel   ),
         .Q        (linha_pixel    ),
@@ -84,13 +76,15 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
         .N(S_COLUMN)
     ) contador_coluna_pixel (
         .clock    (clock         ),
-        .zera_as  (zera_coluna_pixel  ),
+        .zera_as  (reset  ),
         .zera_s   (zera_coluna_pixel  ),
         .conta    (conta_coluna_pixel  ),
         .Q        (coluna_pixel   ),
-        .fim      (    ),
+        .fim      ( s_fim_coluna_pixel  ),
         .meio     (    )
     );
+	 
+	 assign fim_coluna_pixel = s_fim_coluna_pixel;
 
     // Matchers
     // LINHA
@@ -120,15 +114,15 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
 
     // Contador de linhas do quadrante armazenado
     contador_m #(
-        .M(3), 
+        .M(4), 
         .N(2)
     ) contador_linha_quadrante (
         .clock    (clock         ),
-        .zera_as  (zera_linha_quadrante   ),
+        .zera_as  (reset   ),
         .zera_s   (zera_linha_quadrante   ),
         .conta    (conta_linha_quadrante   ),
         .Q        (linha_quadrante_addr    ),
-        .fim      ( ),
+        .fim      ( fim_linha_quadrante),
         .meio     (    )
     );
 
@@ -138,21 +132,23 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
         .N(2)
     ) contador_coluna_quadrante (
         .clock    (clock         ),
-        .zera_as  (zera_coluna_quadrante  ),
+        .zera_as  (reset  ),
         .zera_s   (zera_coluna_quadrante  ),
         .conta    (conta_coluna_quadrante  ),
         .Q        (coluna_quadrante_addr   ),
         .fim      (fim_coluna_quadrante    ),
         .meio     (    )
     );
+	 
+	 assign db_coluna_addr = coluna_pixel[3:0];
 
     // Registrador de pixel
     registrador_pixel  registrador_pixel (
         .clock  (clock ),
         .clear  (reset ),
-        .enable (byte_estavel),
-        .D      (D     ),
-        .Q      (s_byte)
+        .enable (fim_recepcao),
+        .D      (s_byte   ),
+        .Q      (s_pixel)
     );
 
     // Memoria de armazenamento
@@ -166,24 +162,42 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
         .clk         (clock        ),
         .clear       (reset        ),
         .we          (we_byte     ),
-        .data        (s_byte            ),
+        .data        (s_pixel            ),
         .addr_line   (linha_quadrante_addr   ),
         .addr_column (coluna_quadrante_addr  ),
-        .q           (pixel     )
+        .q           (   pixel  )
     );
 
-     // Contador para clock de 1MHz
-    contador_m #(
-        .M(5), 
-        .N(3)
-    ) contador_clock (
-        .clock    (clock),
-        .zera_as  (reset),
-        .zera_s   (reset),
-        .conta    (1'b1),
-        .Q        (    ),
-        .fim      (XCLK),
-        .meio     (    )
+    // UART
+    uart uart_camera (
+        .clock        (clock),
+        .reset        (reset),
+        .partida      (partida_serial),
+        .dados_ascii  (8'b11111111),
+        .saida_serial (saida_serial),
+        .pronto       (fim_transmissao),
+        .db_tick      (),
+        .db_partida   (),
+        .db_saida_serial (),
+        .db_estado    ()
     );
+
+    // Recepção serial
+    rx_serial_8N1 rx_serial_camera (
+        .clock      (clock         ),
+        .reset      (reset         ),
+        .RX         (rx_serial ),
+        .pronto     (fim_recepcao),
+        .dados_ascii(s_byte        ),
+        .db_clock   (),
+        .db_tick    (),
+        .db_dados   (),
+        .db_estado  ()
+    );
+	 
+	 
+
+
+
 
 endmodule

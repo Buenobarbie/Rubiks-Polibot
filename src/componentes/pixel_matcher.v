@@ -1,4 +1,4 @@
-module value_matcher #(parameter N = 8, VALUE1=23, VALUE2=70, VALUE3=117)(
+module pixel_matcher #(parameter N = 8, VALUE1=23, VALUE2=70, VALUE3=117)(
     input [N-1:0] value,
     output match
 );
