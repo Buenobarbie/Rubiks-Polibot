@@ -13,7 +13,7 @@
  * --------------------------------------------------------------------------
  */
 
-module ram #(parameter LINES=176, COLUMNS=288, S_DATA=8, S_LINE=8, S_COLUMN=9)
+module ram #(parameter LINES=3, COLUMNS=3, S_DATA=2, S_LINE=2, S_COLUMN=)16
 (
     input                   clk,
     input                   clear,

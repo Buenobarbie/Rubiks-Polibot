@@ -27,6 +27,7 @@ module indentifica_cores_uc (
     output reg       conta_linha,
     output reg       conta_coluna,
     output reg       we_cor,
+    output reg       we_dist,
     output reg       pronto,
     output reg [3:0] db_estado 
 );
@@ -88,6 +89,7 @@ module indentifica_cores_uc (
         conta_coluna = (Eatual == atualiza_coluna);
         pronto = (Eatual == fim);
         we_cor = (Eatual == armazena_cor);
+        we_dist = (Eatual == armazena_distancia);
 
         case (Eatual)
             inicial:         db_estado = 4'b0000;
