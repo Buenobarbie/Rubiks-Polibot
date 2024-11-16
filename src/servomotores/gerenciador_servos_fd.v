@@ -16,7 +16,9 @@
     output wire fim_servo_peteleco,
     output wire fim_servo_tampa,
     output wire fim_servo_base,
-    output wire pwm,
+    output wire pwm_peteleco,
+	 output wire pwm_tampa,
+	 output wire pwm_base,
     output wire move_servo_peteleco,
     output wire move_servo_tampa,
     output wire move_servo_base
@@ -33,7 +35,7 @@
         .clock       (clock),
         .reset       (reset),
         .posicao     (gira ),
-        .controle    (pwm  ),
+        .controle    (pwm_peteleco  ),
         .db_reset    (  ),
         .db_posicao  (  ),
         .db_controle (  )
@@ -43,7 +45,7 @@
         .clock       (clock),
         .reset       (reset),
         .posicao     (s_posicao_tampa),
-        .controle    (pwm  ),
+        .controle    (pwm_tampa  ),
         .db_reset    (  ),
         .db_posicao  (  ),
         .db_controle (  )
@@ -53,7 +55,7 @@
         .clock       (clock),
         .reset       (reset),
         .posicao     (s_posicao_base),
-        .controle    (pwm  ),
+        .controle    (pwm_base  ),
         .db_reset    (  ),
         .db_posicao  (  ),
         .db_controle (  )
@@ -62,7 +64,7 @@
 // ########## CONTADORES ##########
 
     contador_m #(
-        .M(50000000),
+        .M(42000000),
         .N(26)
     ) contador_servo_peteleco (
         .clock   (clock),
@@ -112,7 +114,7 @@
     flip_flopT flipa_base (
         .clk   (clock),
         .clear (reset ),
-        .t     (shifta_servo_tampa),
+        .t     (shifta_servo_base),
         .q     (s_posicao_base)
     );
 
@@ -121,21 +123,21 @@
     edge_detector edge_peteleco (
             .clock  (clock),
             .reset  (reset),
-            .sinal  (ativa_peteleco),
+            .sinal  (~ativa_peteleco),
             .pulso  (move_servo_peteleco)
         );
 
     edge_detector edge_tampa (
             .clock  (clock),
             .reset  (reset),
-            .sinal  (ativa_tampa),
+            .sinal  (~ativa_tampa),
             .pulso  (move_servo_tampa)
         );
 
     edge_detector edge_base (
             .clock  (clock),
             .reset  (reset),
-            .sinal  (ativa_base),
+            .sinal  (~ativa_base),
             .pulso  (move_servo_base)
         );
 

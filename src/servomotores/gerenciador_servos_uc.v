@@ -64,7 +64,7 @@ module gerenciador_servos_uc (
         conta_servo_base     = (Eatual == timer_servo_base)    ? 1'b1 : 1'b0;
         shifta_servo_tampa   = (Eatual == gira_servo_tampa) ? 1'b1 : 1'b0;
         shifta_servo_base    = (Eatual == gira_servo_base) ? 1'b1 : 1'b0;
-        gira        = (Eatual == conta_servo_peteleco) ? 1'b1 : 1'b0;
+        gira        = (Eatual == gira_servo_peteleco) ? 1'b1 : 1'b0;
         pronto      = (Eatual == fim) ? 1'b1 : 1'b0;
 
         // Saida de depuracao (estado)

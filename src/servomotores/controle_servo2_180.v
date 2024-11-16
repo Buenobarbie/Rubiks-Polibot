@@ -10,8 +10,8 @@ module controle_servo2_180 (
 
       circuito_pwm #(           
         .conf_periodo (1000000),   // 20ms = 20ms / 20ns = 1000000 
-        .largura_0    (28204  ),   // 2º 
-        .largura_1    (76115  )    // 95º
+        .largura_0    (28000  ),   // 2º 
+        .largura_1    (68300  )    // 180 = 114300
       ) controle_servo (
         .clock   (clock   ),
         .reset   (reset   ),

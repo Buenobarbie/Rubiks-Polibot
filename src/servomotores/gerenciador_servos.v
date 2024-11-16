@@ -5,8 +5,10 @@ module gerenciador_servos (
     input ativa_tampa,
     input ativa_base,        
     output wire  pronto,
-    output wire  pwm,
-    output wire [2:0] db_estado
+    output wire  pwm_peteleco,
+	 output wire  pwm_tampa,
+	 output wire  pwm_base//,
+    //output wire [2:0] db_estado
 );
 
     wire s_zera_servo_peteleco;
@@ -42,8 +44,8 @@ module gerenciador_servos (
         .gira                 (s_gira),
         .shifta_servo_tampa   (s_shifta_servo_tampa),
         .shifta_servo_base    (s_shifta_servo_base),
-        .pronto               (pronto),
-        .db_estado            (db_estado)
+        .pronto               (pronto)//,
+        //.db_estado            (db_estado)
     );
 
     gerenciador_servos_fd FD (
@@ -64,7 +66,9 @@ module gerenciador_servos (
         .fim_servo_peteleco  (s_fim_servo_peteleco),
         .fim_servo_tampa     (s_fim_servo_tampa),
         .fim_servo_base      (s_fim_servo_base),
-        .pwm                 (pwm),
+        .pwm_peteleco        (pwm_peteleco),
+		  .pwm_tampa           (pwm_tampa),
+		  .pwm_base            (pwm_base),
         .move_servo_peteleco (s_move_servo_peteleco),
         .move_servo_tampa    (s_move_servo_tampa),
         .move_servo_base     (s_move_servo_base),
