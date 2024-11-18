@@ -215,7 +215,7 @@ def process_signals(signals):
                 rotation_command = target_angles[current_angle]
                 result.append(rotation_command)
     
-    return ''.join(result)
+    return ''.join(result).replace('3', '2')
 
 # Example usage
 signals = strReduced
