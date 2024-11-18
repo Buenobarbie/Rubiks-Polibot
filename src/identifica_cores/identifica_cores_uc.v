@@ -13,7 +13,7 @@
  * --------------------------------------------------------------------------
  */
  
-module indentifica_cores_uc (
+module identifica_cores_uc (
     input wire       clock,
     input wire       reset,
     input wire       iniciar,
@@ -70,7 +70,7 @@ module indentifica_cores_uc (
             atualiza_cor:        Eprox = (fim_cor)? compara_distancias : calcula_diferenca;
             compara_distancias:  Eprox = define_cor;
             define_cor:          Eprox = armazena_cor;
-            armazena_cor:        Eprox = (~fim_coluna)? atualiza_coluna : (fim_linha)? fim : atualiza_coluna;
+            armazena_cor:        Eprox = (~fim_coluna)? atualiza_coluna : (fim_linha)? fim : atualiza_linha;
             atualiza_linha:      Eprox = atualiza_coluna;
             atualiza_coluna:     Eprox = prepara;
             fim:                 Eprox = inicial;
@@ -93,14 +93,19 @@ module indentifica_cores_uc (
 
         case (Eatual)
             inicial:         db_estado = 4'b0000;
-            espera_frame:    db_estado = 4'b0001;
-            espera_linha:    db_estado = 4'b0010;
-            atualiza_linha:  db_estado = 4'b0011;
-            espera_byte:     db_estado = 4'b0100;
-            armazena_byte:   db_estado = 4'b0101;
-            atualiza_coluna: db_estado = 4'b0110;
-            atualiza_linha_quadrante:   db_estado = 4'b0111;
-            atualiza_coluna_quadrante:  db_estado = 4'b1000;
+            prepara:         db_estado = 4'b0001;
+            calcula_diferenca:   db_estado = 4'b0010;
+            obtem_quadrado:      db_estado = 4'b0011;
+            soma_diferencas:     db_estado = 4'b0100;
+            armazena_distancia:  db_estado = 4'b0101;
+            atualiza_cor:        db_estado = 4'b0110;
+            compara_distancias:  db_estado = 4'b0111;
+            define_cor:          db_estado = 4'b1000;
+            armazena_cor:        db_estado = 4'b1001;
+            atualiza_linha:      db_estado = 4'b1010;
+            atualiza_coluna:     db_estado = 4'b1011;
+            fim:                 db_estado = 4'b1100;
+
             default:         db_estado = 4'b1001;
         endcase
     end

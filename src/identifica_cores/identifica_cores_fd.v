@@ -1,4 +1,4 @@
-module identifica_cores 
+module identifica_cores_fd
 (
     input wire             clock,
     input wire             reset,
@@ -106,7 +106,7 @@ module identifica_cores
     // Red
     absDifference #(
         .N(6)
-    ) abs_diff (
+    ) abs_diff_R (
         .a (pixel_R),
         .b (cor_R),
         .result (diff_R)
@@ -115,7 +115,7 @@ module identifica_cores
     // Green
     absDifference #(
         .N(6)
-    ) abs_diff (
+    ) abs_diff_G (
         .a (pixel_G),
         .b (cor_G),
         .result (diff_G)
@@ -124,7 +124,7 @@ module identifica_cores
     // Blue
     absDifference #(
         .N(6)
-    ) abs_diff (
+    ) abs_diff_B (
         .a (pixel_B),
         .b (cor_B),
         .result (diff_B)

@@ -17,14 +17,14 @@ module identifica_cores
 
 
     wire s_fim_cor;
-    wire s_fim_coluna;
-    wire s_fim_linha;
-    wire s_zera_linha;
-    wire s_zera_coluna;
+    wire s_fim_coluna_pixel;
+    wire s_fim_linha_pixel;
+    wire s_zera_linha_pixel;
+    wire s_zera_coluna_pixel;
     wire s_zera_cor;
     wire s_conta_cor;
-    wire s_conta_linha;
-    wire s_conta_coluna;
+    wire s_conta_linha_pixel;
+    wire s_conta_coluna_pixel;
     wire s_we_dist;
 
 
@@ -33,14 +33,14 @@ module identifica_cores
         .reset      (reset),
         .iniciar    (iniciar),
         .fim_cor    (s_fim_cor),
-        .fim_coluna (s_fim_coluna),
-        .fim_linha  (s_fim_linha),
-        .zera_linha (s_zera_linha),
-        .zera_coluna(s_zera_coluna),
+        .fim_coluna (s_fim_coluna_pixel),
+        .fim_linha  (s_fim_linha_pixel),
+        .zera_linha (s_zera_linha_pixel),
+        .zera_coluna(s_zera_coluna_pixel),
         .zera_cor   (s_zera_cor),
         .conta_cor  (s_conta_cor),
-        .conta_linha(s_conta_linha),
-        .conta_coluna(s_conta_coluna),
+        .conta_linha(s_conta_linha_pixel),
+        .conta_coluna(s_conta_coluna_pixel),
         .we_dist    (s_we_dist),
         .we_cor     (we_cor),
         .pronto     (pronto),

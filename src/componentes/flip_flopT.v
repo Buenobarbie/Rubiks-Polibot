@@ -9,9 +9,9 @@ module flip_flopT (
       if (clear)
         q <= 1'b0;
       
-        if(t)else
-          q <= ~q; 
-        else 
-          q <= q; 
+      if(t)
+        q <= ~q; 
+      else 
+        q <= q; 
     end 
 endmodule

@@ -1,4 +1,4 @@
-module MinIndex(
+module minIndex(
     input wire C1,    // Comparison result of R0 vs R1
     input wire C2,    // Comparison result of R2 vs R3
     input wire C3,    // Comparison result of R4 vs R5

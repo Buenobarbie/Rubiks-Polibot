@@ -7,7 +7,7 @@ module rom_cores
     input                   clear,
     input  [2:0]            addr,
     output wire  [15:0]        q
-
+);
     reg [15:0] rom [5:0];
     initial begin
         rom[0] = 16'h5E0B; // branco
@@ -19,8 +19,6 @@ module rom_cores
     end
 
     assign q = rom[addr];
-
-);
 
 endmodule
 
