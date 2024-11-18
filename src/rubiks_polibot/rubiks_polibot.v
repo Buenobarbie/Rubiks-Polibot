@@ -36,6 +36,8 @@ module rubiks_polibot
         .pulso  (s_iniciar)
     );
 
+    
+
 
 	 
 	 hexa7seg hexa5_estado (

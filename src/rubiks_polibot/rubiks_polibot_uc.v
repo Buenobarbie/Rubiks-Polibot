@@ -42,6 +42,7 @@ module interface_OV7670_uc (
     parameter movimenta               = 4'b1010;
     parameter atualiza_movimento      = 4'b1011;
     parameter fim                     = 4'b1100;
+    parameter posicao_inicial         = 4'b1101;
     
     // Estado
     always @(posedge clock, posedge reset) begin
@@ -58,7 +59,8 @@ module interface_OV7670_uc (
             prepara:         Eprox = recebe_imagem;
             recebe_imagem:   Eprox = (imagem_recebida) ? identifica_cores : recebe_imagem;
             identifica_cores:Eprox = (cores_identificadas) ? transmite_cores : identifica_cores;
-            transmite_cores: Eprox = (~cores_transmitidas) ? transmite_cores : (fim_face) ? recebe_movimentos : muda_face;
+            transmite_cores: Eprox = (~cores_transmitidas) ? transmite_cores : (fim_face) ? posicao_inicial : muda_face;
+            posicao_inicial: Eprox = (fim_movimento) ? recebe_movimentos : posicao_inicial;
             muda_face:      Eprox = (fim_movimento) ? atualiza_movimento_face : muda_face;
             atualiza_movimento_face: Eprox = (~meio_face) ? atualiza_face : (movimento_par) ? muda_face : atualiza_movimento_face;
             atualiza_face:  Eprox = recebe_imagem;
@@ -79,7 +81,7 @@ module interface_OV7670_uc (
         captura_imagem = (Eatual == recebe_imagem);
         identificar_cores = (Eatual == identifica_cores);
         enviar_cores = (Eatual == transmite_cores);
-        aciona_movimento = (Eatual == muda_face || Eatual == movimenta);
+        aciona_movimento = (Eatual == muda_face || Eatual == movimenta || Eatual == posicao_inicial);
         conta_movimento = (Eatual == atualiza_movimento_face || Eatual == atualiza_movimento);
         conta_face = (Eatual == atualiza_face);
         pronto = (Eatual == fim);
@@ -100,6 +102,7 @@ module interface_OV7670_uc (
             movimenta:       db_estado = 4'b1010;
             atualiza_movimento: db_estado = 4'b1011;
             fim:             db_estado = 4'b1100;
+            posicao_inicial: db_estado = 4'b1101;
 
 
             default:         db_estado = 4'b1111;

@@ -39,8 +39,41 @@ wire s_we_cor;
 wire s_cor_final;
 wire s_cor;
 
+wire [8:0] s_movimento;
+
+
 // Saidas seriais
 wire s_saida_serial_imagem;
+
+// Contador de faces
+contador_m #(
+    .M(6), 
+    .N(3)
+) contador_face (
+    .clock    (clock         ),
+    .zera_as  (reset   ),
+    .zera_s   (zera_face   ),
+    .conta    (conta_face   ),
+    .Q        (    ),
+    .fim      (fim_face    ),
+    .meio     (meio_face    )
+);
+
+// Contador de movimentos
+contador_m #(
+    .M(480), 
+    .N(9)
+) contador_movimento (
+    .clock    (clock         ),
+    .zera_as  (reset   ),
+    .zera_s   (zera_movimento   ),
+    .conta    (conta_movimento   ),
+    .Q        (s_movimento    ),
+    .fim      (fim_movimento    ),
+    .meio     (   )
+);
+
+assign movimento_par = ~s_movimento[0];
 
 interface_OV7670 imagem (
     .clock          (clock            ),
@@ -108,5 +141,22 @@ transmissao_serial transmitir_cores (
     .saida_serial   (),
     .pronto         (cores_transmitidas)
 );
+
+
+
+ram_movimentos ram_movimentos (
+    .clk          (clock            ),
+    .clear          (reset            ),
+    .we             (),
+    .data           (),
+    .addr           (s_movimento),
+    .q              (movimento)
+);
+
+
+
+
+
+
 
 endmodule
