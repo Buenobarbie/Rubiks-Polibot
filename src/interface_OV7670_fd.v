@@ -34,6 +34,8 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     output wire        saida_serial,
 	 output wire        fim_linha_quadrante,
 	 output wire [3:0]  db_coluna_addr,
+    output wire [1:0] linha_quadrante_addr,
+    output wire [1:0] coluna_quadrante_addr,
     output wire [15:0] pixel
 
 );
@@ -41,13 +43,11 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     // Sinais de controle
     wire [S_LINE-1:0]   linha_pixel;
     wire [S_COLUMN-1:0] coluna_pixel;
-    wire [1:0]          linha_quadrante_addr;
-    wire [1:0]          coluna_quadrante_addr;
+
     wire                match_linha;
     wire                match_coluna;
     wire                we;
     wire                fim_coluna_quadrante;
-    wire [15:0]         s_pixel;
     wire conta_linha_pixel;
     wire s_fim_coluna_pixel;
 	 wire [7:0] s_byte;
@@ -148,25 +148,25 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
         .clear  (reset ),
         .enable (fim_recepcao),
         .D      (s_byte   ),
-        .Q      (s_pixel)
+        .Q      (pixel)
     );
 
-    // Memoria de armazenamento
-    ram #(
-        .LINES  (3 ),
-        .COLUMNS(3),
-        .S_DATA (S_DATA),
-        .S_LINE (2),
-        .S_COLUMN(2)
-    ) memoria (
-        .clk         (clock        ),
-        .clear       (reset        ),
-        .we          (we_byte     ),
-        .data        (s_pixel            ),
-        .addr_line   (linha_quadrante_addr   ),
-        .addr_column (coluna_quadrante_addr  ),
-        .q           (   pixel  )
-    );
+    // // Memoria de armazenamento
+    // ram #(
+    //     .LINES  (3 ),
+    //     .COLUMNS(3),
+    //     .S_DATA (S_DATA),
+    //     .S_LINE (2),
+    //     .S_COLUMN(2)
+    // ) memoria (
+    //     .clk         (clock        ),
+    //     .clear       (reset        ),
+    //     .we          (we_byte     ),
+    //     .data        (s_pixel            ),
+    //     .addr_line   (linha_quadrante_addr   ),
+    //     .addr_column (coluna_quadrante_addr  ),
+    //     .q           (   pixel  )
+    // );
 
     // UART
     uart uart_camera (

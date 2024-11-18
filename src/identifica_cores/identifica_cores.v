@@ -27,11 +27,19 @@ module identifica_cores
     wire s_conta_coluna_pixel;
     wire s_we_dist;
 
+        // Edge detector
+    edge_detector edge_iniciar (
+        .clock  (clock ),
+        .reset  (reset ),
+        .sinal  (iniciar),
+        .pulso  (s_iniciar)
+    );
+
 
     identifica_cores_uc identifica_cores_uc (
         .clock      (clock),
         .reset      (reset),
-        .iniciar    (iniciar),
+        .iniciar    (s_iniciar),
         .fim_cor    (s_fim_cor),
         .fim_coluna (s_fim_coluna_pixel),
         .fim_linha  (s_fim_linha_pixel),

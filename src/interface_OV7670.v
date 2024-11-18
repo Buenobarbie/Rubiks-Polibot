@@ -34,6 +34,10 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
     input wire       rx_serial,
 	 output wire      db_partida_serial,
 	 output wire      saida_serial,
+     output wire      linha_quadrante_addr,
+     output wire      coluna_quadrante_addr,
+     output wire [15:0] pixel,
+     output wire we_byte,
 	 output wire [6:0] db_estado,
 	 output wire [6:0] hex0_pixel,
 	 output wire [6:0] hex1_pixel,
@@ -68,6 +72,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
 	 wire [3:0] db_coluna_addr;
 	 
 	 assign db_partida_Serial = s_partida_serial;
+     assign we_byte = s_we_byte;
 
 
 
@@ -75,7 +80,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
     edge_detector edge_iniciar (
         .clock  (clock ),
         .reset  (reset ),
-        .sinal  (~iniciar),
+        .sinal  (iniciar),
         .pulso  (s_iniciar)
     );
 
@@ -128,7 +133,10 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
         .saida_serial    (saida_serial ),
         .pixel           (s_pixel        ),
 		  .fim_linha_quadrante (s_fim_linha_quadrante),
-		  .db_coluna_addr (db_coluna_addr)
+		  .db_coluna_addr (db_coluna_addr),
+        .linha_quadrante_addr (linha_quadrante_addr),
+        .coluna_quadrante_addr (coluna_quadrante_addr)
+
 
     );
 	 

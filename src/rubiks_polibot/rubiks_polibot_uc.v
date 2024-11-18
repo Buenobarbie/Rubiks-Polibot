@@ -3,6 +3,25 @@ module interface_OV7670_uc (
     input wire clock,
     input wire reset,
     input wire iniciar,
+    input wire imagem_recebida,
+    input wire cores_identificadas,
+    input wire cores_transmitidas,
+    input wire fim_face,
+    input wire fim_movimento,
+    input wire movimento_par,
+    input wire meio_face,
+    input wire movimentos_recebidos,
+    input wire fim_rom,
+    output reg zera_face,
+    output reg zera_movimento,
+    output reg captura_imagem,
+    output reg identificar_cores,
+    output reg enviar_cores,
+    output reg aciona_movimento,
+    output reg conta_movimento,
+    output reg conta_face,
+    output reg pronto,
+    output reg [3:0] db_estado
 
 );
 
