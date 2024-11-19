@@ -7,7 +7,7 @@ module identifica_cores_tb;
     reg         clock_in = 0;
     reg         reset_in = 0;
     reg         iniciar_in = 1;
-    reg         pixel_in = 0;
+    wire  [15:0] pixel_in;
     wire         we_cor_out;
     wire         pronto_out;
     wire [1:0]  linha_pixel_addr_out;
@@ -46,7 +46,7 @@ module identifica_cores_tb;
     // Configurações do clock
     parameter clockPeriod = 20; // clock de 50MHz
     integer caso;
-    integer i, j;
+    // integer i, j;
     
     // Gerador de clock
     always #(clockPeriod/2) clock_in = ~clock_in;
@@ -65,7 +65,7 @@ module identifica_cores_tb;
         #(5*clockPeriod) ;
 
         // Inicio da identificação das cores
-        pixel_in = 16'h4801;
+        // pixel_in = 16'h4801;
         iniciar_in = 1;
         #(5*clockPeriod) ;
         iniciar_in = 0;

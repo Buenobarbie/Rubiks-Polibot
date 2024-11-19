@@ -26,6 +26,7 @@ module identifica_cores
     wire s_conta_linha_pixel;
     wire s_conta_coluna_pixel;
     wire s_we_dist;
+    wire s_iniciar;
 
         // Edge detector
     edge_detector edge_iniciar (
@@ -70,7 +71,8 @@ module identifica_cores
         .coluna_pixel_addr  (coluna_pixel_addr),
         .fim_linha_pixel    (s_fim_linha_pixel),
         .fim_coluna_pixel   (s_fim_coluna_pixel),
-        .cor_final          (cor_final)
+        .cor_final          (cor_final),
+        .fim_cor            (s_fim_cor)
     );
 
 

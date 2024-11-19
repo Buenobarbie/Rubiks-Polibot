@@ -14,6 +14,7 @@ module identifica_cores_fd
     output wire [1:0]          coluna_pixel_addr,
     output wire                fim_linha_pixel,
     output wire                fim_coluna_pixel,
+    output wire                fim_cor,
     output wire [2:0] cor_final
 );
 
@@ -83,7 +84,7 @@ module identifica_cores_fd
         .zera_s   (zera_cor     ),
         .conta    (conta_cor     ),
         .Q        (cor_addr          ),
-        .fim      (    ),
+        .fim      (fim_cor    ),
         .meio     (    )
     );
 
@@ -163,19 +164,30 @@ module identifica_cores_fd
         .q5 (q5)
     );
 
-    assign c0 = q0 > q1;
-    assign c1 = q2 > q3;
-    assign c2 = q4 > q5;
+    wire [12:0] temp0;
+    wire [12:0] temp1;
+    wire [12:0] temp2;
+    wire [12:0] temp3;
 
-    assign c3 = c0 > c1;
-    assign c4 = c2 > c3;
+    assign c0 = q0 < q1;
+    assign c1 = q2 < q3;
+    assign c2 = q4 < q5;
+
+    assign temp0 = (c0) ? q0 : q1;
+    assign temp1 = (c1) ? q2 : q3;
+    assign temp2 = (c2) ? q4 : q5;
+
+    assign c3 = temp0 < temp1;
+
+    assign temp3 = (c3) ? temp0 : temp1;
+    assign c4 = temp3 < temp2;
 
     minIndex minIndex (
-        .C1 (c0),
-        .C2 (c1),
-        .C3 (c2),
-        .C4 (c3),
-        .C5 (c4),
+        .C0 (c0),
+        .C1 (c1),
+        .C2 (c2),
+        .C3 (c3),
+        .C4 (c4),
         .min_index (cor_final)
     );
 

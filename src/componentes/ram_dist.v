@@ -27,7 +27,7 @@ module ram_dist
     always @ (posedge clk or posedge clear)
     begin
         if (clear) begin
-            for(i=0; i<5; i=i+1) begin
+            for(i=0; i<6; i=i+1) begin
                 ram[i] <= 0;
             end
         end
