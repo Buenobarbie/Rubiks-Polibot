@@ -69,7 +69,7 @@ module gerenciador_servos (
 		.pwm_base            (pwm_base),
         .move_servo_peteleco (s_move_servo_peteleco),
         .move_servo_tampa    (s_move_servo_tampa),
-        .move_servo_base     (s_move_servo_base),
+        .move_servo_base     (s_move_servo_base)
     );
 
 endmodule

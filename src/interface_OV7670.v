@@ -69,9 +69,10 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
 	 wire s_conta_linha_quadrante;
     wire s_conta_coluna_quadrante;
 	 wire s_fim_linha_quadrante;
+     wire s_fim_coluna_quadrante;
 	 wire [3:0] db_coluna_addr;
 	 
-	 assign db_partida_Serial = s_partida_serial;
+	 assign db_partida_serial = s_partida_serial;
      assign we_byte = s_we_byte;
 
 
@@ -130,6 +131,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
         .escreve_byte    (s_escreve_byte  ),
         .fim_coluna_pixel (s_fim_coluna_pixel),
         .fim_transmissao (s_fim_transmissao),
+        .fim_coluna_quadrante (s_fim_coluna_quadrante),
         .saida_serial    (saida_serial ),
         .pixel           (s_pixel        ),
 		  .fim_linha_quadrante (s_fim_linha_quadrante),

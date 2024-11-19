@@ -31,6 +31,7 @@ module recebe_movimentos (
     wire s_fim_recepcao;
     wire s_fim_movimentos;
     wire s_partida_serial;
+    wire s_zera;
 
     recebe_movimentos_fd U1_FD (
         .clock          (clock),

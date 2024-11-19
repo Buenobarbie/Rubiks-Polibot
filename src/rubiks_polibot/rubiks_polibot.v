@@ -29,6 +29,8 @@ module rubiks_polibot
 
 
 );
+
+    wire s_iniciar;
     // Edge detector BOTÃO INICIAR
     edge_detector edge_iniciar (
         .clock  (clock ),

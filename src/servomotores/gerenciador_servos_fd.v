@@ -119,7 +119,7 @@
 
 // ########## REGISTRADOR 3-BITS ##########
 
-    registrador_3bits reg (
+    registrador_3bits reg3 (
         .clock (clock),
         .clear (reset),
         .enable(we_registrador),

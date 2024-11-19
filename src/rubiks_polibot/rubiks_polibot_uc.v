@@ -92,11 +92,11 @@ module rubiks_polibot_uc (
         conta_face = (Eatual == atualiza_face);
         pronto = (Eatual == fim);
         obter_movimentos = (Eatual == recebe_movimentos);
-        sel_ram_pixel = (Eatual == RECEBE_IMAGEM);
-        sel_cor = (Eatual == IDENTIFICA_CORES);
-        sel_serial1 = (Eatual == TRANSMITE_CORES || Eatual == RECEBE_MOVIMENTOS);
-        sel_serial2 = (Eatual == RECEBE_MOVIMENTOS);
-        sel_movimento = (Eatual == RECEBE_MOVIMENTOS);
+        sel_ram_pixel = (Eatual == recebe_imagem);
+        sel_cor = (Eatual == identifica_cores);
+        sel_serial1 = (Eatual == transmite_cores || Eatual == recebe_movimentos);
+        sel_serial2 = (Eatual == recebe_movimentos);
+        sel_movimento = (Eatual == recebe_movimentos);
 
 
 

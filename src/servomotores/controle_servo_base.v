@@ -4,7 +4,7 @@ module controle_servo_base (
     input wire [1:0] posicao,
     output wire controle,
     output wire db_reset,
-    output wire db_posicao,
+    output wire [1:0] db_posicao,
     output wire db_controle
 );
 

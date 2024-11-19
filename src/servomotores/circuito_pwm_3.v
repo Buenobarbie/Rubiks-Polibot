@@ -1,4 +1,4 @@
-module circuito_pwm_2 #(         
+module circuito_pwm_3 #(         
     parameter conf_periodo = 1250,
     parameter largura_0   = 0,
     parameter largura_1   = 50,

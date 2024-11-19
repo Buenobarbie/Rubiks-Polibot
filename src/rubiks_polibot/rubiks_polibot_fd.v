@@ -31,7 +31,7 @@ module rubiks_polibot_fd(
     output pwm_tampa,
     output pwm_peteleco,
     output saida_serial,
-    output [2:0] db_movimento,
+    output [2:0] db_movimento
 
 );
 
@@ -62,6 +62,10 @@ wire [8:0] r_addr_movimento;
 wire [8:0] addr_movimento;
 
 wire [2:0] movimento;
+wire conta_movimento;
+wire s_zera_movimento;
+wire zera_addr_movimento;
+wire w_conta_movimento;
 
 
 // Saidas seriais
@@ -133,7 +137,7 @@ interface_OV7670 imagem (
     .hex2_pixel     (),
     .hex3_pixel     (),
     .hex4_pixel     (),
-    .db_fim_recepcao (),
+    .db_fim_recepcao (imagem_recebida),
     .linha_quadrante_addr(s_linha_face),
     .coluna_quadrante_addr(s_coluna_face),
     .pixel          (s_pixel_face),
@@ -154,10 +158,10 @@ ram_3x3 ram_pixels (
 
 // 1: Escrita dos valores de pixel na RAM (RECEBE_IMAGEM)
 // 0: Leitura dos valores de pixel na RAM (IDENTIFICA_CORES)
-assign ram_pixels_addr1 = (selram_pixel) ? s_linha_face : w_linha_cor;
+assign ram_pixels_addr1 = (sel_ram_pixel) ? s_linha_face : w_linha_cor;
 assign ram_pixels_addr2 = (sel_ram_pixel) ? s_coluna_face : w_coluna_cor;
 
-identifica_cores (
+identifica_cores identifica_cores (
     .clock              (clock),
     .reset              (reset),
     .iniciar            (identificar_cores),
@@ -168,7 +172,7 @@ identifica_cores (
     .coluna_pixel_addr  (w_coluna_cor),
     .cor_final          (s_cor_final),
     .db_estado          ()
-)
+);
 
 
 // 1: Escrita dos valores das cores na RAM (IDENTIFICA_CORES)
@@ -218,11 +222,12 @@ recebe_movimentos recebe_movimentos(
     .reset           (reset),
     .iniciar         (obter_movimentos),
     .movimento  (w_data_movimento),
-    .zera_adrr   (zera_addr_movimento)
+    .zera_adrr   (zera_addr_movimento),
     .saida_serial      (s_saida_serial_movimentos),
-    .conta_addr   (w_conta_movimento)
+    .conta_addr   (w_conta_movimento),
     .we_movimento      (we_movimento),
-    .db_estado        ()
+    .db_estado        (),
+    .pronto          (movimentos_recebidos)
 );
 
 

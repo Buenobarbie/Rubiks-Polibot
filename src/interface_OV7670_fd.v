@@ -30,6 +30,7 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     output wire        escreve_byte,
     output wire        fim_coluna_pixel,
     output wire        fim_transmissao,
+    output wire        fim_coluna_quadrante,
 	 output wire         fim_recepcao,
     output wire        saida_serial,
 	 output wire        fim_linha_quadrante,
@@ -47,11 +48,9 @@ module interface_OV7670_fd #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE
     wire                match_linha;
     wire                match_coluna;
     wire                we;
-    wire                fim_coluna_quadrante;
     wire conta_linha_pixel;
     wire s_fim_coluna_pixel;
 	 wire [7:0] s_byte;
-	 wire s_fim_coluna_quadrante;
 
 
     assign conta_linha_pixel = conta_coluna_pixel && s_fim_coluna_pixel;

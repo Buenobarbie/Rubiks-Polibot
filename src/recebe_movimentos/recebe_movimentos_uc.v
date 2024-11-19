@@ -20,10 +20,10 @@ module recebe_movimentos_uc (
     input wire fim_transmissao,
     input wire fim_recepcao,
     input wire fim_movimentos,
-    output wire zera_addr,
-    output wire partida_serial,
-    output wire we_movimento, 
-    output wire conta_addr,
+    output reg zera_addr,
+    output reg partida_serial,
+    output reg we_movimento, 
+    output reg conta_addr,
     output reg [2:0] db_estado
 );
 
