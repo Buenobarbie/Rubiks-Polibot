@@ -7,20 +7,20 @@
     input wire       conta_coluna  ,
     input wire       zera_linha    ,
     input wire       zera_coluna   ,
+    input wire [2:0] dados_pixel,
     output wire      saida_serial  ,
-    output wire      shift_serial  ,
+    output wire [1:0] addr_linha, 
+    output wire [1:0] addr_coluna,
     output wire      fim_coluna    ,
     output wire      fim_linha     ,
     output wire      pronto        
 );
 
-    wire [15:0] dados_pixel;
-    wire [7:0]  dados_serial;
-    wire [1:0]  addr_linha;
-    wire [1:0]  addr_coluna;
-    wire s_shift_serial;
 
-    assign shift_serial = s_shift_serial;
+    wire [7:0]  dados_serial;
+    assign dados_serial = {5'b0, dados_pixel};
+
+
 
    // Instancia UART
    uart uart(
@@ -36,37 +36,23 @@
        .db_estado       (  )
    );
 
-   // Instancia RAM 3x3
-   ram #(
-       .LINES    (3 ),
-       .COLUMNS  (3 ),
-       .S_DATA   (16),
-       .S_LINE   (2 ),
-       .S_COLUMN (2 )
-   ) ram_3x3 (
-       .clk   (clock),
-       .clear (reset),
-       .we    (  ),
-       .data  (  ),
-       .addr_line   (addr_linha ),
-       .addr_column (addr_coluna),
-       .q           (dados_pixel)
-   );
+//    // Instancia RAM 3x3
+//    ram #(
+//        .LINES    (3 ),
+//        .COLUMNS  (3 ),
+//        .S_DATA   (16),
+//        .S_LINE   (2 ),
+//        .S_COLUMN (2 )
+//    ) ram_3x3 (
+//        .clk   (clock),
+//        .clear (reset),
+//        .we    (  ),
+//        .data  (  ),
+//        .addr_line   (addr_linha ),
+//        .addr_column (addr_coluna),
+//        .q           (dados_pixel)
+//    );
 
-   // Instancia MUX serial 
-   mux_serial mux (
-       .hexa_bits (dados_pixel ),
-       .shift   (s_shift_serial),
-       .oct_bits  (dados_serial)
-   );
-
-   // Instancia flip-flop-T
-   flip_flopT flip_flopT (
-       .clk   (clock),
-       .clear (reset ),
-       .t     (flipa),
-       .q     (s_shift_serial)
-   );
     
     // Instancia contador de linhas da RAM
     contador_m #(

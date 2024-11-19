@@ -2,7 +2,6 @@ module transmissao_serial_uc (
     input      clock       ,
     input      reset       ,
     input      iniciar     ,
-    input      shift_serial,
     input      pronto      ,
     input      fim_linha   , 
     input      fim_coluna  ,
@@ -20,7 +19,6 @@ module transmissao_serial_uc (
     parameter preparacao         = 4'b0001; 
     parameter transmissao_serial = 4'b0010; 
     parameter espera_serial      = 4'b0011; 
-    parameter atualiza_shift     = 4'b0100;
     parameter conta_coluna_pixel = 4'b0101; 
     parameter conta_linha_pixel  = 4'b0110; 
 
@@ -41,8 +39,7 @@ module transmissao_serial_uc (
             inicial            : Eprox = iniciar ? preparacao : inicial;
             preparacao         : Eprox = transmissao_serial;
             transmissao_serial : Eprox = espera_serial;
-            espera_serial      : Eprox = ~pronto ? espera_serial : (shift_serial ? conta_coluna_pixel : atualiza_shift);
-            atualiza_shift     : Eprox = transmissao_serial;
+            espera_serial      : Eprox = ~pronto ? espera_serial : conta_coluna_pixel ;
             conta_coluna_pixel : Eprox = fim_coluna ? conta_linha_pixel : transmissao_serial;
             conta_linha_pixel  : Eprox = fim_linha ? inicial : transmissao_serial;
             default            : Eprox = inicial;
@@ -56,8 +53,6 @@ module transmissao_serial_uc (
         conta_coluna   = (Eatual == conta_coluna_pixel) ? 1'b1 : 1'b0;
         conta_linha    = (Eatual == conta_linha_pixel) ? 1'b1 : 1'b0;
         partida_serial = (Eatual == transmissao_serial) ? 1'b1 : 1'b0;
-        flipa          = (Eatual == atualiza_shift ||
-                          Eatual == conta_coluna_pixel) ? 1'b1 : 1'b0; 
        
         // Saida de depuracao (estado)
         case (Eatual)
@@ -65,7 +60,6 @@ module transmissao_serial_uc (
             preparacao         : db_estado = 4'b0001; 
             transmissao_serial : db_estado = 4'b0010; 
             espera_serial      : db_estado = 4'b0011; 
-            atualiza_shift     : db_estado = 4'b0100; 
             conta_coluna_pixel : db_estado = 4'b0101;
             conta_linha_pixel  : db_estado = 4'b0110;
             default            : db_estado = 4'b1110; 

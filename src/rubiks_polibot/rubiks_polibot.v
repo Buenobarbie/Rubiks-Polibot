@@ -21,7 +21,11 @@ module rubiks_polibot
     input wire       iniciar,
     input wire       rx_serial,
 	output wire      saida_serial,
-	output wire [6:0] db_estado
+    output wire      pwm_peteleco,
+    output wire      pwm_tampa,
+    output wire      pwm_base,
+	output wire [6:0] db_estado,
+    output wire [2:0] db_movimento
 
 
 );
@@ -37,7 +41,10 @@ module rubiks_polibot
     );
 
     
-
+     hexa7seg hexa4_movimento (
+		.hexa(s_db_movimento),
+		.display(db_movimento)
+	 );
 
 	 
 	 hexa7seg hexa5_estado (

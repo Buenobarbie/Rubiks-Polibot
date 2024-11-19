@@ -85,6 +85,7 @@ module interface_OV7670_uc (
         conta_movimento = (Eatual == atualiza_movimento_face || Eatual == atualiza_movimento);
         conta_face = (Eatual == atualiza_face);
         pronto = (Eatual == fim);
+        obter_movimentos = (Eatual == recebe_movimentos);
 
 
 
