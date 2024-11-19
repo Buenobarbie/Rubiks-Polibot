@@ -63,6 +63,8 @@ module rubiks_polibot
     wire s_meio_face;
     wire s_movimentos_recebidos;
     wire s_fim_rom;
+    wire [2:0] s_db_movimento;
+    wire [3:0] s_db_estado;
 
 
     // Unidade de controle
@@ -131,7 +133,7 @@ module rubiks_polibot
         .pwm_tampa      (pwm_tampa),
         .pwm_peteleco   (pwm_peteleco),
         .saida_serial   (saida_serial),
-        .db_movimento   (db_movimento)
+        .db_movimento   (s_db_movimento)
 
     );
 
