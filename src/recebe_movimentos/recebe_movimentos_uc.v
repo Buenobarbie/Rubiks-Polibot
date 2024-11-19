@@ -24,6 +24,7 @@ module recebe_movimentos_uc (
     output reg partida_serial,
     output reg we_movimento, 
     output reg conta_addr,
+    output reg pronto,
     output reg [2:0] db_estado
 );
 
@@ -37,7 +38,8 @@ module recebe_movimentos_uc (
     parameter recebe_serial       = 3'b011;
     parameter armazena_movimento  = 3'b100;
     parameter atualiza_addr       = 3'b101; 
-    
+    parameter fim                 = 3'b110; 
+
     // Estado
     always @(posedge clock, posedge reset) begin
         if (reset) 
@@ -54,8 +56,9 @@ module recebe_movimentos_uc (
             transmite_serial:   Eprox = fim_transmissao ? recebe_serial : transmite_serial;
             recebe_serial:      Eprox = fim_recepcao ? armazena_movimento : recebe_serial;
             armazena_movimento: Eprox = atualiza_addr; 
-            atualiza_addr:      Eprox = fim_movimentos ? inicial : recebe_serial;
-            default:         Eprox = inicial;
+            atualiza_addr:      Eprox = fim_movimentos ? fim : recebe_serial;
+            fim:                Eprox = inicial;
+            default:            Eprox = inicial;
         endcase
     end
 
@@ -63,8 +66,9 @@ module recebe_movimentos_uc (
     always @(*) begin
         zera_addr      = (Eatual == preparacao);
         partida_serial = (Eatual == preparacao);
-        we_movimento        = (Eatual == armazena_movimento);
+        we_movimento   = (Eatual == armazena_movimento);
         conta_addr     = (Eatual == atualiza_addr);
+        pronto         = (Eatual == fim);
 
         case (Eatual)
             inicial:                   db_estado = 3'b000;
@@ -73,6 +77,7 @@ module recebe_movimentos_uc (
             recebe_serial:             db_estado = 3'b011;
             armazena_movimento:        db_estado = 3'b100;
             atualiza_addr:             db_estado = 3'b101;
+            fim:                       db_estado = 3'b110;
             default:                   db_estado = 3'b111;
         endcase
     end

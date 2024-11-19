@@ -24,6 +24,7 @@ module recebe_movimentos (
     output        saida_serial,
     output        conta_addr,
     output        we_movimento,
+    output        pronto,
     output  [2:0] db_estado
 );
 
@@ -43,19 +44,19 @@ module recebe_movimentos (
         .fim_movimentos  (s_fim_movimentos ),
         .saida_serial    (saida_serial),
         .movimento       (movimento)
-       
     );
 
     recebe_movimentos_uc U2_UC (
         .clock   (clock),
         .reset   (reset),
         .iniciar (iniciar),
+        ,pronto  (pronto),
         .fim_transmissao (s_fim_transmissao),
         .fim_recepcao    (s_fim_recepcao   ),
         .fim_movimentos  (s_fim_movimentos ),
         .zera_addr       (zera_addr        ),
         .partida_serial  (s_partida_serial ),
-        .we_movimento       (we_movimento   ),
+        .we_movimento    (we_movimento   ),
         .conta_addr    (conta_addr),
         .db_estado     (db_estado )
     );
