@@ -8,13 +8,16 @@ module rubiks_polibot_fd(
     input  identificar_cores,
     input  enviar_cores,
     input  aciona_movimento,
-    input  conta_movimento,
+    input  r_conta_movimento,
     input  conta_face,
     input  pronto,
     input obter_movimentos,
     input rx_serial,
     input sel_serial1,
     input sel_serial2,
+    input sel_ram_pixel,
+    input sel_cor,
+    input sel_movimento,
     output imagem_recebida,
     output cores_identificadas,
     output cores_transmitidas,
@@ -74,7 +77,9 @@ wire s_saida_serial_movimentos;
 assign saida_serial = (~sel_serial1) ? s_saida_serial_imagem : (~sel_serial2) ? s_saida_serial_cores : s_saida_serial_movimentos;
 
 // Contador de faces
-contador_m #(
+// Utilizado para leitura de cada uma das faces do cubo
+// Seu meio fica ativo da metade ao fim
+contador_m_meio #(
     .M(6), 
     .N(3)
 ) contador_face (
@@ -88,6 +93,13 @@ contador_m #(
 );
 
 // Contador de movimentos
+// Serve como endereço da memória de movimentos
+// Permite slavar até 480 movimentos
+
+// 1: Escrita dos valores dos movimentos na RAM (RECEBE_MOVIMENTOS)
+// 0: Leitura dos valores dos movimentos na RAM (ACIONA_MOVIMENTO)
+assign conta_movimento = (sel_movimento) ? w_conta_movimento : r_conta_movimento;
+
 contador_m #(
     .M(480), 
     .N(9)
@@ -96,12 +108,16 @@ contador_m #(
     .zera_as  (reset   ),
     .zera_s   (zera_movimento   ),
     .conta    (conta_movimento   ),
-    .Q        (r_addr_movimento    ),
-    .fim      (fim_movimento    ),
+    .Q        (addr_movimento    ),
+    .fim      (    ),
     .meio     (   )
 );
 
-assign movimento_par = ~r_addr_movimento[0];
+// Quando o movimento inicial for par e o contador
+// de faces já estiver na metade, significa que dois movimentos
+// são necessários. Assim utilizaremos essa informação
+// para ler e executar dois movimentos da memória
+assign movimento_par = ~addr_movimento[0];
 
 interface_OV7670 imagem (
     .clock          (clock            ),
@@ -124,18 +140,21 @@ interface_OV7670 imagem (
 );
 
 // RAM com os pixels lidos de uma face
+// 3x3 com valores de 16 bits
 ram_3x3 ram_pixels (
     .clk          (clock            ),
     .clear          (reset            ),
     .we             (s_we_byte_face),
     .data           (s_pixel_face),
-    .addr1          (s_linha_face),
-    .addr2          (s_coluna_face),
+    .addr1          (ram_pixels_addr1),
+    .addr2          (ram_pixels_addr2),
     .q              (s_pixel)
 );
 
-assign ram_pixels_addr1 = (ram_pixel_sel) ? s_linha_face : w_linha_cor;
-assign ram_pixels_addr2 = (ram_pixel_sel) ? s_coluna_face : w_coluna_cor;
+// 1: Escrita dos valores de pixel na RAM (RECEBE_IMAGEM)
+// 0: Leitura dos valores de pixel na RAM (IDENTIFICA_CORES)
+assign ram_pixels_addr1 = (selram_pixel) ? s_linha_face : w_linha_cor;
+assign ram_pixels_addr2 = (sel_ram_pixel) ? s_coluna_face : w_coluna_cor;
 
 identifica_cores (
     .clock              (clock),
@@ -150,8 +169,12 @@ identifica_cores (
     .db_estado          ()
 )
 
+
+// 1: Escrita dos valores das cores na RAM (IDENTIFICA_CORES)
+// 0: Leitura dos valores das cores na RAM (ENVIA_CORES)
 assign linha_cor = (sel_cor) ? w_linha_cor : r_linha_cor;   
 assign coluna_cor = (sel_cor) ? w_coluna_cor : r_coluna_cor;
+
 
 // RAM cores
 ram_3x3 #(.S_DATA(3))
@@ -178,13 +201,12 @@ transmissao_serial transmitir_cores (
     .addr_coluna   (r_coluna_cor)
 );
 
-assign addr_movimento = (sel_movimento) ? w_addr_movimento : r_addr_movimento;
 
 ram_movimentos ram_movimentos (
     .clk          (clock            ),
     .clear          (reset            ),
     .we             (we_movimento),
-    .data           ()w_data_movimento,
+    .data           (w_data_movimento),
     .addr           (addr_movimento),
     .q              (movimento)
 );
@@ -194,10 +216,11 @@ ram_movimentos ram_movimentos (
     // .clk             (clock),
     // .reset           (reset),
     // .iniciar         (obter_movimentos),
-    // .w_addr_movimento  (w_addr_movimento),
+    // .addr_movimento  (w_addr_movimento),
     // .we_movimento      (we_movimento),
-    // .w_data_movimento  (w_data_movimento),
-    // .saida_serial      (s_saida_serial_movimentos)
+    // .data_movimento  (w_data_movimento),
+    // .saida_serial      (s_saida_serial_movimentos),
+    // .conta_movimento   (w_conta_movimento)
 // );
 
 

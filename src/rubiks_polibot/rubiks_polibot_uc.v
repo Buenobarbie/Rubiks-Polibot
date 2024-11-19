@@ -1,5 +1,5 @@
 
-module interface_OV7670_uc (
+module rubiks_polibot_uc (
     input wire clock,
     input wire reset,
     input wire iniciar,
@@ -21,6 +21,12 @@ module interface_OV7670_uc (
     output reg conta_movimento,
     output reg conta_face,
     output reg pronto,
+    output reg obter_movimentos,
+    output reg sel_ram_pixel,
+    output reg sel_cor,
+    output reg sel_serial1,
+    output reg sel_serial2,
+    output reg sel_movimento,
     output reg [3:0] db_estado
 
 );
@@ -86,6 +92,11 @@ module interface_OV7670_uc (
         conta_face = (Eatual == atualiza_face);
         pronto = (Eatual == fim);
         obter_movimentos = (Eatual == recebe_movimentos);
+        sel_ram_pixel = (Eatual == RECEBE_IMAGEM);
+        sel_cor = (Eatual == IDENTIFICA_CORES);
+        sel_serial1 = (Eatual == TRANSMITE_CORES || Eatual == RECEBE_MOVIMENTOS);
+        sel_serial2 = (Eatual == RECEBE_MOVIMENTOS);
+        sel_movimento = (Eatual == RECEBE_MOVIMENTOS);
 
 
 
