@@ -1,7 +1,7 @@
-module circuito_pwm #(         // valores default
+module circuito_pwm_2 #(           // valores default
     parameter conf_periodo = 1250, // Período do sinal PWM [1250 => f=4KHz (25us)]
-    parameter largura_0   = 0,     // Largura do pulso p/ 000 [0 => 0]
-    parameter largura_1   = 50     // Largura do pulso p/ 001 [50 => 1us]
+    parameter largura_0    = 0   , // Largura do pulso p/ 000 [0 => 0]
+    parameter largura_1    = 50    // Largura do pulso p/ 001 [50 => 1us]
 ) (
     input        clock,
     input        reset,

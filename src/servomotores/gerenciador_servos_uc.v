@@ -15,7 +15,7 @@ module gerenciador_servos_uc (
     output reg conta_servo_base,
     output reg gira,
     output reg shifta_servo_tampa,
-    output reg shifta_servo_base,
+    output reg we_registrador,
     output reg pronto,
     output reg [2:0] db_estado
 );
@@ -63,7 +63,7 @@ module gerenciador_servos_uc (
         conta_servo_tampa    = (Eatual == timer_servo_tampa)   ? 1'b1 : 1'b0;
         conta_servo_base     = (Eatual == timer_servo_base)    ? 1'b1 : 1'b0;
         shifta_servo_tampa   = (Eatual == gira_servo_tampa) ? 1'b1 : 1'b0;
-        shifta_servo_base    = (Eatual == gira_servo_base) ? 1'b1 : 1'b0;
+        we_registrador       = (Eatual == gira_servo_base) ? 1'b1 : 1'b0;
         gira        = (Eatual == gira_servo_peteleco) ? 1'b1 : 1'b0;
         pronto      = (Eatual == fim) ? 1'b1 : 1'b0;
 

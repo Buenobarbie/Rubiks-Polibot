@@ -1,9 +1,7 @@
  module gerenciador_servos_fd (
     input wire clock,
     input wire reset,
-    input wire ativa_peteleco, 
-    input wire ativa_tampa, 
-    input wire ativa_base, 
+    input wire [2:0] move,
     input wire zera_servo_peteleco,
     input wire zera_servo_tampa,
     input wire zera_servo_base,
@@ -11,14 +9,14 @@
     input wire conta_servo_tampa,
     input wire conta_servo_base,
     input wire gira,
-    input wire shifta_servo_tampa, 
-    input wire shifta_servo_base,
+    input wire shifta_servo_tampa,
+    input wire we_registrador,
     output wire fim_servo_peteleco,
     output wire fim_servo_tampa,
     output wire fim_servo_base,
     output wire pwm_peteleco,
-	 output wire pwm_tampa,
-	 output wire pwm_base,
+	output wire pwm_tampa,
+	output wire pwm_base,
     output wire move_servo_peteleco,
     output wire move_servo_tampa,
     output wire move_servo_base
@@ -26,12 +24,11 @@
 );
 
     wire s_posicao_tampa;
-    wire s_posicao_base;
-
+    wire [1:0] s_posicao_base;
 
 // ########## SERVOS ##########
 
-    controle_servo_360 servo_peteleco (
+    controle_servo_peteleco servo_peteleco (
         .clock       (clock),
         .reset       (reset),
         .posicao     (gira ),
@@ -41,7 +38,7 @@
         .db_controle (  )
     );
 
-    controle_servo1_180 servo_tampa (
+    controle_servo_tampa servo_tampa (
         .clock       (clock),
         .reset       (reset),
         .posicao     (s_posicao_tampa),
@@ -51,7 +48,7 @@
         .db_controle (  )
     );
 
-    controle_servo2_180 servo_base (
+    controle_servo_base servo_base (
         .clock       (clock),
         .reset       (reset),
         .posicao     (s_posicao_base),
@@ -102,7 +99,7 @@
         .meio    (  )  
     );
 
-// ########## FLIP-FLOPS-T ##########
+// ########## FLIP-FLOP-T ##########
 
     flip_flopT flipa_tampa (
         .clk   (clock),
@@ -111,34 +108,23 @@
         .q     (s_posicao_tampa)
     );
 
-    flip_flopT flipa_base (
-        .clk   (clock),
-        .clear (reset ),
-        .t     (shifta_servo_base),
-        .q     (s_posicao_base)
+// ########## SERVO-MATCHER ##########
+
+    servo_matcher matcher (
+        .move     (move),
+        .peteleco (move_servo_peteleco),
+        .tampa    (move_servo_tampa),
+        .base     (move_servo_base)
     );
 
-// ########## EDGE-DETECTORS ##########
+// ########## REGISTRADOR 3-BITS ##########
 
-    edge_detector edge_peteleco (
-            .clock  (clock),
-            .reset  (reset),
-            .sinal  (~ativa_peteleco),
-            .pulso  (move_servo_peteleco)
-        );
-
-    edge_detector edge_tampa (
-            .clock  (clock),
-            .reset  (reset),
-            .sinal  (~ativa_tampa),
-            .pulso  (move_servo_tampa)
-        );
-
-    edge_detector edge_base (
-            .clock  (clock),
-            .reset  (reset),
-            .sinal  (~ativa_base),
-            .pulso  (move_servo_base)
-        );
+    registrador_3bits reg (
+        .clock (clock),
+        .clear (reset),
+        .enable(we_registrador),
+        .D(move),
+        .Q(s_posicao_base)
+    );
 
 endmodule

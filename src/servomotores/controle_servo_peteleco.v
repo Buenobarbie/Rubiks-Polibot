@@ -1,4 +1,4 @@
-module controle_servo2_180 (
+module controle_servo_peteleco (
     input wire clock,
     input wire reset,
     input wire posicao,
@@ -8,10 +8,10 @@ module controle_servo2_180 (
     output wire db_controle
 );
 
-      circuito_pwm #(           
+      circuito_pwm_2 #(           
         .conf_periodo (1000000),   // 20ms = 20ms / 20ns = 1000000 
-        .largura_0    (28000  ),   // 2º 
-        .largura_1    (68300  )    // 180 = 114300
+        .largura_0    (75000  ),   // parado
+        .largura_1    (90000  )    // gira 
       ) controle_servo (
         .clock   (clock   ),
         .reset   (reset   ),

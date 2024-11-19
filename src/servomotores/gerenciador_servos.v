@@ -1,13 +1,11 @@
 module gerenciador_servos (
     input clock,
     input reset,
-    input ativa_peteleco,
-    input ativa_tampa,
-    input ativa_base,        
+    input [2:0]  move,
     output wire  pronto,
     output wire  pwm_peteleco,
-	 output wire  pwm_tampa,
-	 output wire  pwm_base//,
+	output wire  pwm_tampa,
+	output wire  pwm_base //,
     //output wire [2:0] db_estado
 );
 
@@ -24,6 +22,7 @@ module gerenciador_servos (
     wire s_fim_servo_tampa;
     wire s_fim_servo_base;
     wire s_shifta_servo_tampa;
+    wire s_we_registrador;
     wire s_gira;
     
     gerenciador_servos_uc UC (
@@ -43,17 +42,15 @@ module gerenciador_servos (
         .conta_servo_base     (s_conta_servo_base),
         .gira                 (s_gira),
         .shifta_servo_tampa   (s_shifta_servo_tampa),
-        .shifta_servo_base    (s_shifta_servo_base),
-        .pronto               (pronto)//,
-        //.db_estado            (db_estado)
+        .we_registrador       (s_we_registrador),
+        .pronto               (pronto) //,
+        //.db_estado          (db_estado)
     );
 
     gerenciador_servos_fd FD (
-        .clock      (clock),
-        .reset      (reset),
-        .ativa_peteleco (ativa_peteleco ),
-        .ativa_tampa    (ativa_tampa    ),
-        .ativa_base     (ativa_base     ),
+        .clock          (clock),
+        .reset          (reset),
+        .move           (move),
         .zera_servo_peteleco (s_zera_servo_peteleco),
         .zera_servo_tampa    (s_zera_servo_tampa),
         .zera_servo_base     (s_zera_servo_base),
@@ -62,13 +59,13 @@ module gerenciador_servos (
         .conta_servo_base     (s_conta_servo_base),
         .gira                 (s_gira),
         .shifta_servo_tampa   (s_shifta_servo_tampa),
-        .shifta_servo_base    (s_shifta_servo_base),
+        .we_registrador       (s_we_registrador),
         .fim_servo_peteleco  (s_fim_servo_peteleco),
         .fim_servo_tampa     (s_fim_servo_tampa),
         .fim_servo_base      (s_fim_servo_base),
         .pwm_peteleco        (pwm_peteleco),
-		  .pwm_tampa           (pwm_tampa),
-		  .pwm_base            (pwm_base),
+		.pwm_tampa           (pwm_tampa),
+		.pwm_base            (pwm_base),
         .move_servo_peteleco (s_move_servo_peteleco),
         .move_servo_tampa    (s_move_servo_tampa),
         .move_servo_base     (s_move_servo_base),
