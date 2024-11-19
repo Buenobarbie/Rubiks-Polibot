@@ -23,7 +23,7 @@ module recebe_movimentos (
     output        zera_addr,
     output        saida_serial,
     output        conta_addr,
-    output        we_byte,
+    output        we_movimento,
     output  [2:0] db_estado
 );
 
@@ -54,7 +54,7 @@ module recebe_movimentos (
         .fim_movimentos  (s_fim_movimentos ),
         .zera_addr       (zera_addr        ),
         .partida_serial  (s_partida_serial ),
-        .we_byte       (we_byte   ),
+        .we_movimento       (we_movimento   ),
         .conta_addr    (conta_addr),
         .db_estado     (db_estado )
     );

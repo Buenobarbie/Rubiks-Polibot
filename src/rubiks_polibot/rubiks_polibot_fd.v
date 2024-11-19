@@ -99,6 +99,7 @@ contador_m_meio #(
 // 1: Escrita dos valores dos movimentos na RAM (RECEBE_MOVIMENTOS)
 // 0: Leitura dos valores dos movimentos na RAM (ACIONA_MOVIMENTO)
 assign conta_movimento = (sel_movimento) ? w_conta_movimento : r_conta_movimento;
+assign s_zera_movimento = (sel_movimento) ? zera_addr_movimento : zera_movimento;
 
 contador_m #(
     .M(480), 
@@ -106,7 +107,7 @@ contador_m #(
 ) contador_movimento (
     .clock    (clock         ),
     .zera_as  (reset   ),
-    .zera_s   (zera_movimento   ),
+    .zera_s   (s_zera_movimento   ),
     .conta    (conta_movimento   ),
     .Q        (addr_movimento    ),
     .fim      (    ),
@@ -212,16 +213,17 @@ ram_movimentos ram_movimentos (
 );
 
 
-// recebe_movimentos recebe_movimentos(
-    // .clk             (clock),
-    // .reset           (reset),
-    // .iniciar         (obter_movimentos),
-    // .addr_movimento  (w_addr_movimento),
-    // .we_movimento      (we_movimento),
-    // .data_movimento  (w_data_movimento),
-    // .saida_serial      (s_saida_serial_movimentos),
-    // .conta_movimento   (w_conta_movimento)
-// );
+recebe_movimentos recebe_movimentos(
+    .clock             (clock),
+    .reset           (reset),
+    .iniciar         (obter_movimentos),
+    .movimento  (w_data_movimento),
+    .zera_adrr   (zera_addr_movimento)
+    .saida_serial      (s_saida_serial_movimentos),
+    .conta_addr   (w_conta_movimento)
+    .we_movimento      (we_movimento),
+    .db_estado        ()
+);
 
 
 gerenciador_servos gerenciador_servos(

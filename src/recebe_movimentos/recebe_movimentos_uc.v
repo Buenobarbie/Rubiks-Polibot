@@ -22,7 +22,7 @@ module recebe_movimentos_uc (
     input wire fim_movimentos,
     output wire zera_addr,
     output wire partida_serial,
-    output wire we_byte, 
+    output wire we_movimento, 
     output wire conta_addr,
     output reg [2:0] db_estado
 );
@@ -63,7 +63,7 @@ module recebe_movimentos_uc (
     always @(*) begin
         zera_addr      = (Eatual == preparacao);
         partida_serial = (Eatual == preparacao);
-        we_byte        = (Eatual == armazena_movimento);
+        we_movimento        = (Eatual == armazena_movimento);
         conta_addr     = (Eatual == atualiza_addr);
 
         case (Eatual)
