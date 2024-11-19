@@ -9,7 +9,7 @@ module uart (
     output       db_tick         ,
     output       db_partida      ,
     output       db_saida_serial ,
-    output [6:0] db_estado       
+    output [3:0] db_estado       
 );
  
     wire       s_reset        ;
@@ -51,8 +51,8 @@ module uart (
         .carrega   ( s_carrega    ),
         .desloca   ( s_desloca    ),
         .pronto    ( pronto       ),
-        .db_estado (              )
-    );
+        .db_estado ( db_estado    )         
+            );
 
     // gerador de tick
     // fator de divisao para 9600 bauds (5208=50M/9600) 13 bits

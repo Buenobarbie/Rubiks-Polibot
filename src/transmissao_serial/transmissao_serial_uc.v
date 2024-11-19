@@ -5,7 +5,6 @@ module transmissao_serial_uc (
     input      pronto      ,
     input      fim_linha   , 
     input      fim_coluna  ,
-    output reg flipa         ,
     output reg partida_serial, 
     output reg conta_linha   , 
     output reg conta_coluna , 

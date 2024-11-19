@@ -173,6 +173,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
 	 );
 
 	assign db_fim_recepcao = s_fim_recepcao;
+    assign pixel = s_pixel;
 	 
 	 
 endmodule
