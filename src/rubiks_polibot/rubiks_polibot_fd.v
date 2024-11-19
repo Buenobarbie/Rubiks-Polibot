@@ -224,7 +224,7 @@ recebe_movimentos recebe_movimentos(
     .reset           (reset),
     .iniciar         (obter_movimentos),
     .movimento  (w_data_movimento),
-    .zera_adrr   (zera_addr_movimento),
+    .zera_addr   (zera_addr_movimento),
     .saida_serial      (s_saida_serial_movimentos),
     .conta_addr   (w_conta_movimento),
     .we_movimento      (we_movimento),

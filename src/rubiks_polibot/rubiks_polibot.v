@@ -112,7 +112,7 @@ module rubiks_polibot
         .identificar_cores(s_identificar_cores),
         .enviar_cores   (s_enviar_cores),
         .aciona_movimento(s_aciona_movimento),
-        .conta_movimento(s_conta_movimento),
+        .r_conta_movimento(s_conta_movimento),
         .conta_face     (s_conta_face),
         .pronto         (s_pronto),
         .obter_movimentos(s_obter_movimentos),
