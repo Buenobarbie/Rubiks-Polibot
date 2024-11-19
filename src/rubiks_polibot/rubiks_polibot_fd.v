@@ -216,6 +216,8 @@ ram_movimentos ram_movimentos (
     .q              (movimento)
 );
 
+assign fim_rom = (movimento == 3'b000);
+
 
 recebe_movimentos recebe_movimentos(
     .clock             (clock),
