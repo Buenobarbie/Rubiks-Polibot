@@ -1,6 +1,7 @@
 module gerenciador_servos_uc ( 
     input clock,
     input reset,
+    input inicia,
     input move_servo_peteleco,
     input move_servo_tampa,
     input move_servo_base,
@@ -43,7 +44,7 @@ module gerenciador_servos_uc (
     // Logica de proximo estado
     always @* begin
         case (Eatual)
-            inicial             : Eprox = move_servo_peteleco ? gira_servo_peteleco : (move_servo_tampa ? gira_servo_tampa : (move_servo_base ? gira_servo_base : inicial));
+            inicial             : Eprox = ~inicia ? inicial : (move_servo_peteleco ? gira_servo_peteleco : (move_servo_tampa ? gira_servo_tampa : (move_servo_base ? gira_servo_base : inicial)));
             gira_servo_peteleco : Eprox = fim_servo_peteleco ? fim : gira_servo_peteleco;
             gira_servo_tampa    : Eprox = timer_servo_tampa;
             gira_servo_base     : Eprox = timer_servo_base;

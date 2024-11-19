@@ -1,6 +1,7 @@
 module gerenciador_servos (
     input clock,
     input reset,
+    input inicia,
     input [2:0]  move,
     output wire  pronto,
     output wire  pwm_peteleco,

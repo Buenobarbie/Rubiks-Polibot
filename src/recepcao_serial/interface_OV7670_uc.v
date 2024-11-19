@@ -42,8 +42,8 @@ module interface_OV7670_uc (
     parameter transmite_serial    = 4'b0010;
     parameter recebe_serial       = 4'b0011;
     parameter le_byte             = 4'b0100;
-    parameter armazena_byte   = 4'b0101;
-    parameter atualiza_coluna = 4'b0110;
+    parameter armazena_byte       = 4'b0101;
+    parameter atualiza_coluna     = 4'b0110;
     parameter atualiza_linha_quadrante  = 4'b0111;
     parameter atualiza_coluna_quadrante = 4'b1000;
     
