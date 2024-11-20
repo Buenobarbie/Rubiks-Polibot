@@ -50,7 +50,7 @@ module recebe_movimentos (
         .clock   (clock),
         .reset   (reset),
         .iniciar (iniciar),
-        ,pronto  (pronto),
+        .pronto  (pronto),
         .fim_transmissao (s_fim_transmissao),
         .fim_recepcao    (s_fim_recepcao   ),
         .fim_movimentos  (s_fim_movimentos ),
