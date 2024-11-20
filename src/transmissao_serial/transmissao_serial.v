@@ -7,7 +7,7 @@ module transmissao_serial (
     output       fim              ,
     output       db_partida_serial,
     output       db_saida_serial  ,
-    output [2:0] dados_pixel      ,
+    input [2:0] dados_pixel      ,
     output [1:0] addr_linha       ,
     output [1:0] addr_coluna      ,
     output [6:0] db_estado       
@@ -41,7 +41,7 @@ module transmissao_serial (
         .conta_coluna   ( s_conta_coluna  ),
         .zera_linha     ( s_zera_linha    ),
         .zera_coluna    ( s_zera_coluna   ),
-        .dados_pixel    ( dados_pixel     ),
+        .dados_pixel    ( {5'b0,dados_pixel}     ),
         .addr_linha     ( addr_linha      ),
         .addr_coluna    ( addr_coluna     ),
         .saida_serial   ( s_saida_serial  ),

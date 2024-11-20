@@ -223,6 +223,7 @@ recebe_movimentos recebe_movimentos(
     .clock             (clock),
     .reset           (reset),
     .iniciar         (obter_movimentos),
+    .rx_serial       (rx_serial),
     .movimento  (w_data_movimento),
     .zera_addr   (zera_addr_movimento),
     .saida_serial      (s_saida_serial_movimentos),

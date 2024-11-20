@@ -18,6 +18,7 @@ module recebe_movimentos (
     input  clock,
     input  reset,
     input  iniciar,
+    input  rx_serial,
 
     output  [2:0] movimento,
     output        zera_addr,
@@ -32,12 +33,11 @@ module recebe_movimentos (
     wire s_fim_recepcao;
     wire s_fim_movimentos;
     wire s_partida_serial;
-    wire s_zera;
 
     recebe_movimentos_fd U1_FD (
         .clock          (clock),
         .reset          (reset),
-        .rx_serial      ( s_zera       ),
+        .rx_serial      ( rx_serial    ),
         .partida_serial  (s_partida_serial  ),
         .fim_recepcao    (s_fim_recepcao   ),
         .fim_transmissao (s_fim_transmissao),
