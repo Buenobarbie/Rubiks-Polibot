@@ -38,6 +38,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
      output wire      coluna_quadrante_addr,
      output wire [15:0] pixel,
      output wire we_byte,
+     output wire pronto,
 	 output wire [6:0] db_estado,
 	 output wire [6:0] hex0_pixel,
 	 output wire [6:0] hex1_pixel,
@@ -104,6 +105,7 @@ module interface_OV7670 #(parameter LINES=120, COLUMNS=320, S_DATA=16, S_LINE=7,
         .conta_coluna_pixel (s_conta_coluna_pixel),
         .partida_serial  (s_partida_serial ),
         .db_estado       (s_db_estado      ),
+        .pronto          (pronto),
 		  .fim_linha_quadrante (s_fim_linha_quadrante)
     );
 

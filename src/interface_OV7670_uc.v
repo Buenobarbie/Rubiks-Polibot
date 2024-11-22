@@ -31,6 +31,7 @@ module interface_OV7670_uc (
     output reg conta_coluna_quadrante,
     output reg conta_coluna_pixel,
     output reg partida_serial,
+    output reg pronto,
     output reg [3:0] db_estado
 );
 
@@ -47,6 +48,7 @@ module interface_OV7670_uc (
     parameter atualiza_coluna = 4'b0110;
     parameter atualiza_linha_quadrante  = 4'b0111;
     parameter atualiza_coluna_quadrante = 4'b1000;
+    parameter fim                = 4'b1001;
     
     // Estado
     always @(posedge clock, posedge reset) begin
@@ -67,7 +69,7 @@ module interface_OV7670_uc (
             armazena_byte:   Eprox = (fim_coluna_quadrante ? atualiza_linha_quadrante : atualiza_coluna_quadrante);
             atualiza_coluna: Eprox = recebe_serial;
             atualiza_linha_quadrante:  Eprox = atualiza_coluna_quadrante;
-            atualiza_coluna_quadrante: Eprox = (fim_linha_quadrante)? inicial : atualiza_coluna;
+            atualiza_coluna_quadrante: Eprox = (fim_linha_quadrante)? fim : atualiza_coluna;
 
             default:         Eprox = inicial;
         endcase
@@ -84,6 +86,7 @@ module interface_OV7670_uc (
         conta_coluna_quadrante  = (Eatual == atualiza_coluna_quadrante);
         conta_coluna_pixel      = (Eatual == atualiza_coluna);
         partida_serial          = (Eatual == captura);
+        pronto                  = (Eatual == fim);
 
 
 
