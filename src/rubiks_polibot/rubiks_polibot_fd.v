@@ -67,7 +67,6 @@ wire s_zera_movimento;
 wire zera_addr_movimento;
 wire w_conta_movimento;
 
-
 // Saidas seriais
 wire s_saida_serial_imagem;
 wire s_saida_serial_cores;
@@ -137,8 +136,7 @@ interface_OV7670 imagem (
     .hex2_pixel     (),
     .hex3_pixel     (),
     .hex4_pixel     (),
-    .db_fim_recepcao (),
-    .pronto         (imagem_recebida),
+    .db_fim_recepcao (imagem_recebida),
     .linha_quadrante_addr(s_linha_face),
     .coluna_quadrante_addr(s_coluna_face),
     .pixel          (s_pixel_face),
@@ -162,7 +160,7 @@ ram_3x3 ram_pixels (
 assign ram_pixels_addr1 = (sel_ram_pixel) ? s_linha_face : w_linha_cor;
 assign ram_pixels_addr2 = (sel_ram_pixel) ? s_coluna_face : w_coluna_cor;
 
-identifica_cores identifica_cores (
+identifica_cores identifica_cores(
     .clock              (clock),
     .reset              (reset),
     .iniciar            (identificar_cores),
@@ -219,19 +217,17 @@ ram_movimentos ram_movimentos (
 
 assign fim_rom = (movimento == 3'b000);
 
-
 recebe_movimentos recebe_movimentos(
     .clock             (clock),
     .reset           (reset),
     .iniciar         (obter_movimentos),
-    .rx_serial       (rx_serial),
     .movimento  (w_data_movimento),
     .zera_addr   (zera_addr_movimento),
     .saida_serial      (s_saida_serial_movimentos),
     .conta_addr   (w_conta_movimento),
     .we_movimento      (we_movimento),
     .db_estado        (),
-    .pronto          (movimentos_recebidos)
+	 .pronto  (movimentos_recebidos)
 );
 
 
