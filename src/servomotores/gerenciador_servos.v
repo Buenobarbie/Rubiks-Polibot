@@ -29,7 +29,7 @@ module gerenciador_servos (
     gerenciador_servos_uc UC (
         .clock   (clock),
         .reset   (reset),
-        .iniciar (iniciar),
+		  .iniciar (iniciar),
         .move_servo_peteleco (s_move_servo_peteleco),
         .move_servo_tampa    (s_move_servo_tampa),
         .move_servo_base     (s_move_servo_base),
