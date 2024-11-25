@@ -10,12 +10,12 @@ module rom_cores
 );
     reg [15:0] rom [7:0];
     initial begin
-        rom[0] = 16'h5E0B; // branco  0
-        rom[1] = 16'h4801; // vermelho
-        rom[2] = 16'hC101; // laranja
-        rom[3] = 16'h86C1; // amarelo
-        rom[4] = 16'h1E03; // verde
-        rom[5] = 16'h12A9; // azul
+        rom[0] = 16'h4aab; // branco  0
+        rom[1] = 16'h6000; // vermelho
+        rom[2] = 16'he800; // laranja
+        rom[3] = 16'h5343; // amarelo
+        rom[4] = 16'h03e5; // verde
+        rom[5] = 16'h180A; // azul
         rom[6] = 16'h0;
         rom[7] = 16'h0;
     end
