@@ -2,12 +2,12 @@ import numpy as np
 cube = []
 face_letters = ['R', 'B', 'L', 'F', 'D', 'U']
 face_colors = []
-colors_read = [ [ ["amarelo", "amarelo", "amarelo" ],["amarelo", "amarelo", "amarelo" ], ["amarelo", "amarelo", "amarelo" ] ],
-              [ ["vermelho", "azul", "azul" ],["vermelho", "azul", "azul" ], ["vermelho", "azul", "azul" ] ],
-              [ ["branco", "branco", "branco" ],["branco", "branco", "branco" ], ["branco", "branco", "branco" ] ],
-              [ ["verde", "verde", "laranja" ],["verde", "verde", "laranja" ], ["verde", "verde", "laranja" ] ],
-              [ ["azul", "azul", "azul" ],["laranja", "laranja", "laranja" ], ["laranja", "laranja", "laranja" ] ],
-              [ ["verde", "verde", "verde" ] ,["vermelho", "vermelho", "vermelho" ], ["vermelho", "vermelho", "vermelho" ] ] ]
+colors_read = [ [ ["vermelho", "laranja", "laranja" ],["vermelho", "amarelo", "amarelo" ], ["azul", "amarelo", "amarelo" ] ],
+              [ ["branco", "azul", "branco" ],["laranja", "azul", "branco" ], ["laranja", "azul", "branco" ]],
+              [ ["vermelho", "verde", "laranja" ],["vermelho", "branco", "laranja" ], ["vermelho", "branco", "amarelo" ] ],
+              [ ["verde", "verde", "amarelo" ],["verde", "verde", "amarelo" ], ["vermelho", "vermelho", "amarelo" ] ],
+              [ ["laranja", "verde", "verde" ],["azul", "laranja", "branco" ], ["azul", "laranja", "verde" ] ],
+              [ ["azul", "azul", "verde" ] ,["amarelo", "vermelho", "branco" ], ["azul", "vermelho", "branco" ] ] ]
 for i in range(1,7):
     # colors = matriz_de_cores(cube_faces[i-1])
     colors = colors_read[i-1]
