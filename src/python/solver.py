@@ -52,10 +52,9 @@ nextState =[{"R": [1],"R'": [0],"R2":[2],
           "F":[2],"F'":[1],"F2":[1],
           "B":[2],"B'":[1],"B2":[1,2]}]
 
-str = "F2 U R2 U'"
-sol = str.split()
 
-def cancle(str):
+def cancle(str, steps):
+    sol = steps.split()
     stack = []
     stack.append("0")
     rot = 0
@@ -141,14 +140,15 @@ def value(stack):
             value = value + 4.5
     return value
 
-def reduce(i,str,state):
+def reduce(i,str,state,steps):
+    sol = steps.split()
     if(i == len(sol)):
-        str = cancle(str)
+        str = cancle(str, steps)
         return str
     length = 99999
     best = ""
     for j in range(len(moves[state][sol[i]])):
-        temp  = reduce(i+1,str+moves[state][sol[i]][j],nextState[state][sol[i]][j])
+        temp  = reduce(i+1,str+moves[state][sol[i]][j],nextState[state][sol[i]][j], steps)
         val = value(stack = temp)
         if(val < length):
             length = val
@@ -164,9 +164,6 @@ def nMoves(str):
         if(i == "z"):
             n = n + 2
     return n
-strReduced = reduce(i = 0,str = "",state = 0)
-strReduced = strReduced[1:]
-print("".join(strReduced))
 
 # 1: hit
 # 2: block
@@ -218,11 +215,15 @@ def process_signals(signals):
     return ''.join(result).replace('3', '2')
 
 # Example usage
-signals = strReduced
-print(process_signals(signals))
 
 
+def steps_to_rubiks_polibot_movements(steps):
+    strReduced = reduce(i = 0,str = "",state = 0, steps = "L2 U'")[1:]
+    signals = strReduced
+    return process_signals(signals)
 
-    
+if __name__ == "__main__":
+    print(steps_to_rubiks_polibot_movements("L2 U'"))
+
 
 

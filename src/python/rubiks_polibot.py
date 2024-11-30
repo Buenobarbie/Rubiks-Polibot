@@ -4,96 +4,100 @@ from PIL import Image
 import struct
 import numpy as np
 
-# Define the serial port and parameters
+import cv2
+import numpy as np
+
+from image_processing import identificar_cor, matriz_de_cores, path_to_most_recent_image, delete_all_images
+from solver import steps_to_rubiks_polibot_movements
+
+# ------------------------------ DEFINIR CONEXÃO SERIAL ------------------------------
 ser = serial.Serial(
-    port='COM19',  # Change this to your serial port
+    port='COM9',  # Change this to your serial port
     baudrate=115200,
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE
 )
+print("Porta Serial conectada\n")
 
-# Folder path where images are stored
-folder_path = 'C:\\Projetos\\T1BA6\\arduino-camera\\images'  # Update with your folder path
+# ------------------------------ PASTA DAS IMAGENS DO CUBO ------------------------------
+folder_path = 'C:\\Projetos\\T1BA6\\imagens'  
 
-def load_most_recent_image():
-    """Load the most recent image from the folder."""
-    files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.bmp'))]
-    files.sort(key=lambda f: os.path.getmtime(os.path.join(folder_path, f)), reverse=True)
-    
-    if files:
-        most_recent_image_path = os.path.join(folder_path, files.pop(0))
-        print(f"Loading image: {most_recent_image_path}")
-        image = Image.open(most_recent_image_path).convert("RGB")
-        return image
-    else:
-        print("No images found in the folder!")
-        return None
 
-def rgb_to_rgb565(r, g, b):
-    """Convert RGB to RGB565 format (RRRRRGGG GGGBBBBB)."""
-    r = r >> 3
-    g = g >> 2
-    b = b >> 3
-    return (r << 11) | (g << 5) | b
-
-def transmit_image_in_rgb565(image):
-    """Transmit the image via serial in RGB565 format."""
-    width, height = image.size
-    pixels = image.load()
-
-    for y in range(height):
-        for x in range(width):
-            r, g, b = pixels[x, y]
-            rgb565 = rgb_to_rgb565(r, g, b)
-            ser.write(struct.pack(">H", rgb565))
-
-    print("Image transmitted in RGB565 format.")
-
-def receive_transmissions():
-    """Receive 54 transmissions and store them in a 3x3x6 array."""
-    cube_array = np.zeros((3, 3, 6), dtype=int)
-    for face in range(6):
-        for row in range(3):
-            for col in range(3):
-                data = ser.read(1)
-                cube_array[row, col, face] = int.from_bytes(data, byteorder='big')
-                print(f"Received data: Face {face+1}, Row {row+1}, Col {col+1}: {cube_array[row, col, face]}")
-    return cube_array
-
-# Main program loop
+# ------------------------------ CAPTURA IMAGEM DE CADA FACE (6) ------------------------------
 cube_faces = []
 while len(cube_faces) < 6:
+
+    print("Esperando comando para capturar imagem...")
     data = ser.read(1)
-    if data == b'\xFF':  # Check if received data matches 11111111
-        image = load_most_recent_image()
+    data_int = int.from_bytes(data, byteorder='big')
+    data_bin = "{:08b}".format(data_int)
+    print(f"Received data: {data_int} (binary: {data_bin})")
+
+    # Se receber um byte 0xFF, capturar a imagem
+    if data == b'\xFF':  
+        image = path_to_most_recent_image(folder_path)
         if image:
-            cube_faces.append(image)
-            print(f"Stored image {len(cube_faces)}")
-            transmit_image_in_rgb565(image)
+            face = matriz_de_cores(image)
+            print(face)
+            cube_faces.append(face)
+            print(f"Imagem {len(cube_faces)} armazenada")
+            delete_all_images(folder_path)
         else:
-            print("No image found, retrying...")
+            print("Nennuma imagem encontrada")
 
-print("All 6 faces of the cube have been stored.")
+# -----------------------------  ROTACIONA IMAGENS SE NECESSÁRIO ------------------------------
+cube = []
+face_letters = ['R', 'B', 'L', 'F', 'D', 'U']
+face_colors = []
+for i in range(1,7):
+    colors = cube_faces[i-1]
+    colors = rotated_180 = np.array(colors)[::-1, ::-1].tolist() 
+    
+    face_colors.append(colors[1][1])
 
-# Receive and store 54 transmissions in a 3x3x6 array
-cube_data = receive_transmissions()
-print("Cube data received successfully.")
+    if i == 5 or i == 6:
+        colors = np.array(colors)[::-1].T.tolist()
 
-# Combine all the data into the movements array and transmit
-movements = {
-    "images": cube_faces,
-    "cube_data": cube_data.tolist()
-}
+    cube.append(colors)
 
+# ------------------------- STRING DO ESTADO DO CUBO -------------------------
+cube_String = ""
+for l in ['U', 'R', 'F', 'D', 'L', 'B']:
+    print(cube[face_letters.index(l)])
+    for i in range(3):
+        for j in range(3):
+            color = cube[face_letters.index(l)][i][j]
+            letter = face_letters[face_colors.index(color)]
+            cube_String += letter
+print(cube_String)
+
+# ------------------------- RESOLUÇÃO DO CUBO  POR KOCIEMBA -------------------------
+import kociemba
+steps = kociemba.solve(cube_String)
+print(steps)
+
+
+# ------------------------- MOVIMENTOS PARA O POLIBOT -------------------------
 # Example movements array
-movements = [2, 4, 1, 1, 5, 0]
+# movements = [1, 1, 2, 6, 2, 1, 1, 5, 1, 1, 1, 2, 6, 2, 5, 1, 6, 1, 1, 2, 5, 2, 1, 1, 1, 6, 1, 1, 1, 2, 5, 2, 0]
+# movements = [1, 2, 6, 2, 1, 2, 5, 2 ,0]
+# movements = [0]
+# movements = [2,6,2,1,2,4,2,1,1,0]
+movements = steps_to_rubiks_polibot_movements(steps)
 
-# Transmit each movement value over the serial port
-for movement in movements:
-    ser.write(bytes([movement]))  # Convert the integer to a single byte and send
-    print(f"Transmitted movement: {movement}")
+# ------------------------- TRANSMISSÃO DOS MOVIMENTOS -------------------------
+print("Esperando para transmitir movimentos")
+data = ser.read(1)
+if data == b'\xFF':
+    print("Começando transmissao dos movimentos")
+    for movement in movements:
+        ser.write(bytes([movement])) 
+        print(f"Movimento transmitido: {movement}")
 
+# ------------------------- LIMPEZA DE IMAGENS -------------------------
+while True:
+    delete_all_images(folder_path)
 
 # Close the serial port
 ser.close()

@@ -16,7 +16,7 @@ ser = serial.Serial(
 # Folder path where images are stored
 folder_path = 'C:\\Projetos\\T1BA6\\arduino-camera\\images'  # Update with your folder path
 
-def delete_all_images():
+def delete_all_images(folder_path):
     """Delete all image files in the folder."""
     for filename in os.listdir(folder_path):
         file_path = os.path.join(folder_path, filename)
